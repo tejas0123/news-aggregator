@@ -8,4 +8,7 @@ public class Messages {
     public static final String USER_NOT_FOUND = "User not found";
     public static final String INVALID_INPUT = "Invalid input. Please enter a valid input";
     public static final String INVALID_REQUEST_BODY = "Missing required data in request body";
+	public static final String USER_NOT_ADDED = "Failed to add user";
+	public static final String USER_SIGNUP_SUCCESSFUL = "User signup successful";
+	public static final String USERNAME_EXISTS = "User with the given email already exists!";
 }

@@ -26,9 +26,9 @@ public class DBConnection {
 
             dataSource = new HikariDataSource(config);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Failed to initialize HikariCP", e);
+        } catch (RuntimeException exception) {
+            exception.printStackTrace();
+            throw new RuntimeException("Failed to initialize HikariCP", exception);
         }
     }
 
