@@ -1,0 +1,5 @@
+package model;
+
+public enum NewsCategory {
+	SCIENCE, POLITICS, SPORTS, BUSINESS, TECHNOLOGY, HEALTH, GENERAL, ENTERTAINMENT
+}

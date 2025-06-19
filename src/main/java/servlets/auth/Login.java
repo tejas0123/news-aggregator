@@ -22,7 +22,6 @@ import exception.DAOException;
 import exception.UserNotFoundException;
 	
 public class Login extends HttpServlet {
-	private static final long serialVersionUID = 1L;
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         handleLogin(request, response);
@@ -34,7 +33,7 @@ public class Login extends HttpServlet {
 		
 		Optional<UserCredentials> userCredentialsOptional = HttpServletResponseHelper.getRequestBody(request, UserCredentials.class);
         UserCredentials userCredentials = userCredentialsOptional.orElseThrow(() -> new BadRequestException(Messages.INVALID_REQUEST_BODY));
-        
+        System.out.println(userCredentials);
 		try {
 			loginResponse = userAuthService.login(userCredentials);
 			response.setStatus(200);
