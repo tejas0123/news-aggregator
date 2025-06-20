@@ -3,7 +3,7 @@ package dto;
 import java.util.Optional;
 
 public record Response<T>(
-		boolean isSuccessful,
+		boolean isOperationSuccessful,
 		String message,
 		Optional<T> data
 	){

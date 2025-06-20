@@ -20,22 +20,19 @@ public class UserAuthenticationServiceImpl implements UserAuthenticationService{
 	}
 
 	@Override
-    public Response<Void> login(UserCredentials loginCredentials) {
-		try {
-			Optional<UserCredentials> userCredentialsOptional = userAuthDAO.fetchUserCredentials(loginCredentials);
+	public Response<Void> login(UserCredentials loginCredentials) {
+		Optional<UserCredentials> userCredentialsOptional = userAuthDAO.fetchUserCredentials(loginCredentials);
 
-	        UserCredentials userCredentials = userCredentialsOptional.orElseThrow(() -> 
-	        	new UserNotFoundException(Messages.USER_NOT_FOUND));
+	    UserCredentials userCredentials = userCredentialsOptional.orElseThrow(() -> 
+	    	new UserNotFoundException(Messages.USER_NOT_FOUND));
 
-	        if (!userCredentials.isPasswordCorrect(loginCredentials.password())) {
-	            throw new UserNotFoundException(Messages.INCORRECT_CREDENTIALS);
-	        }
-	        
-	        return new Response<>(true, Messages.LOGIN_SUCCESSFUL, Optional.empty());
-		} catch(RuntimeException exception) {
-			return new Response<>(false, exception.getMessage(), Optional.empty());
-		}
+	    if (!userCredentials.isPasswordCorrect(loginCredentials.password())) {
+	        throw new UserNotFoundException(Messages.INCORRECT_CREDENTIALS);
+	    }
+
+	    return new Response<>(true, Messages.LOGIN_SUCCESSFUL, Optional.empty());
 	}
+
 
 	@Override
 	public Response<Void> signup(UserDetails userDetails) {

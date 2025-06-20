@@ -2,9 +2,15 @@ package dto;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import model.Role;
 
-public record UserCredentials(String email, String password) {
-    public boolean isPasswordCorrect(String enteredPassword){
+public record UserCredentials(int userId, String email, String password, Role role) {
+
+    public UserCredentials(String email, String password) {
+        this(0, email, password, null);
+    }
+
+    public boolean isPasswordCorrect(String enteredPassword) {
         return this.password().equals(getPasswordHash(enteredPassword));
     }
 

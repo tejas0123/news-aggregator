@@ -27,7 +27,7 @@ public class Login extends HttpServlet {
         handleLogin(request, response);
 	}
 	
-	private HttpServletResponse handleLogin(HttpServletRequest request, HttpServletResponse response){
+	private void handleLogin(HttpServletRequest request, HttpServletResponse response){
 		Response<Void> loginResponse;
 		UserAuthenticationService userAuthService = AppConfig.getUserAuthServiceInstance();
 		
@@ -45,7 +45,7 @@ public class Login extends HttpServlet {
 			response.setStatus(500);
 		}
 		
-		return HttpServletResponseHelper.buildHttpServletResponse(response, loginResponse)
+		HttpServletResponseHelper.buildHttpServletResponse(response, loginResponse)
 	        .orElseGet(() -> {
 	            response.setStatus(500);
 	            return response;
