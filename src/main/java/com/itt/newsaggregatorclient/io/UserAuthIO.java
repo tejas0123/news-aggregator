@@ -50,6 +50,7 @@ public class UserAuthIO {
         UserCredentials userCredentials = getLoginCredentials();
         PostRequestsHandler loginAPIHandler = AppConfig.getLoginHandler();
         APIResponse loginResponse = loginAPIHandler.sendAPIRequest(userCredentials);
+        System.out.println(loginResponse);
         return loginResponse.success();
     }
 

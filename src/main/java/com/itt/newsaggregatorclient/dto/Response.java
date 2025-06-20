@@ -5,5 +5,5 @@ import java.util.Optional;
 public record Response<T>(
         boolean isOperationSuccessful,
         String message,
-        Optional<T> responseEntity
+        Optional<T> data
 ) {}
