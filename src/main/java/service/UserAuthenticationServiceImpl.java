@@ -29,7 +29,8 @@ public class UserAuthenticationServiceImpl implements UserAuthenticationService{
 	    if (!userCredentials.isPasswordCorrect(loginCredentials.password())) {
 	        throw new UserNotFoundException(Messages.INCORRECT_CREDENTIALS);
 	    }
-
+	    
+	    
 	    return new Response<>(true, Messages.LOGIN_SUCCESSFUL, Optional.empty());
 	}
 

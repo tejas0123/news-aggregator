@@ -76,8 +76,8 @@ public class NewsAPIRequestImpl implements NewsAPIRequest{
 		}
 	}
 	
-	private Instant getLatestFetchDate() {
-		
-	}
+//	private Instant getLatestFetchDate() {
+//		
+//	}
 
 }

@@ -1,9 +1,9 @@
 package config;
 
-import dao.UserAuthenticationDAOImpl;
-import service.UserAuthenticationServiceImpl;
-import service.UserAuthenticationService;
 import dao.UserAuthenticationDAO;
+import dao.UserAuthenticationDAOImpl;
+import service.UserAuthenticationService;
+import service.UserAuthenticationServiceImpl;
 
 public class AppConfig {
 	private static UserAuthenticationDAO userAuthenticationDAO = null;
