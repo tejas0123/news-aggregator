@@ -39,4 +39,7 @@
     <servlet-name>Signup</servlet-name>
     <url-pattern>/api/v1/auth/signup</url-pattern>
   </servlet-mapping>
+  <listener>
+        <listener-class>newsprovider.NewsAPIScheduler</listener-class>
+  </listener>
 </web-app>
