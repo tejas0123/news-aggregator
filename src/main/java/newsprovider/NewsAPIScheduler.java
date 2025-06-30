@@ -18,7 +18,7 @@ public class NewsAPIScheduler implements ServletContextListener{
     public void contextInitialized(ServletContextEvent sce) {
         scheduler = Executors.newSingleThreadScheduledExecutor();
         scheduler.scheduleAtFixedRate(() -> {	            
-        newsAPIRequest.fetchNewsHeadlines();
+        //newsAPIRequest.fetchNewsHeadlines();
         }, 0, 5, TimeUnit.MINUTES);
 
         System.out.println("Scheduler started at " + Instant.now());

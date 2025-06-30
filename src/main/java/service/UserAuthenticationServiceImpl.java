@@ -30,7 +30,6 @@ public class UserAuthenticationServiceImpl implements UserAuthenticationService{
 	        throw new UserNotFoundException(Messages.INCORRECT_CREDENTIALS);
 	    }
 	    
-	    
 	    return new Response<>(true, Messages.LOGIN_SUCCESSFUL, Optional.empty());
 	}
 

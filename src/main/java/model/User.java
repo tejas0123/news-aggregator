@@ -9,8 +9,6 @@ public class User {
     private String lastName;
     private String email;
     private Gender gender;
-    private LocalDate dateOfBirth;
-    private String phone;
     private String password;
     private Instant createdAt;
 }

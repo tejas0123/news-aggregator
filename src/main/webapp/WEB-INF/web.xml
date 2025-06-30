@@ -40,6 +40,16 @@
     <url-pattern>/api/v1/auth/signup</url-pattern>
   </servlet-mapping>
   <listener>
-        <listener-class>newsprovider.NewsAPIScheduler</listener-class>
+    <listener-class>newsprovider.NewsAPIScheduler</listener-class>
   </listener>
+  <servlet>
+    <description></description>
+    <display-name>Search</display-name>
+    <servlet-name>Search</servlet-name>
+    <servlet-class>servlets.search.Search</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Search</servlet-name>
+    <url-pattern>/api/v1/articles</url-pattern>
+  </servlet-mapping>
 </web-app>

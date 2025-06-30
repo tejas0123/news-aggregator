@@ -11,8 +11,6 @@ public record UserDetails(
 	    String lastName,
 	    String email,
 	    Gender gender,
-	    LocalDate dateOfBirth,
-	    String phone,
 	    String password
 ) {
 	public String getPasswordHash() {

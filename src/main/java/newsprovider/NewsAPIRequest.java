@@ -11,13 +11,13 @@ import java.util.Optional;
 import model.NewsArticle;
 
 public interface NewsAPIRequest {
+	HttpClient httpClient = HttpClient.newHttpClient();
+	
 	HttpRequest buildRequest(String uri, Map<String, String> headers);
 	
 	void fetchNewsHeadlines();
 	
 	List<NewsArticle> processAPIResponse(String jsonResponseData, String newsHeadlinesCategory);
-	
-	HttpClient httpClient = HttpClient.newHttpClient();
 	
 	default void addHeaders(HttpRequest.Builder httpBuilder, Map<String, String> headers) {
 	        headers.forEach(httpBuilder::header);

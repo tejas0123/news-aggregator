@@ -21,6 +21,7 @@ public class JwtUtil {
 				.signWith(SignatureAlgorithm.HS256, SECRET.getBytes())
 				.compact();
 	}
+	
 	public static Claims validateTokenAndGetSubject(String token) {
         Claims claims = Jwts.parser()
                 .setSigningKey(SECRET.getBytes())

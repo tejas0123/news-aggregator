@@ -15,6 +15,7 @@ public class SingletonObjectMapper {
 
         private static ObjectMapper createMapper() {
         	ObjectMapper mapper = new ObjectMapper();
+        	mapper.registerModule(new Jdk8Module());
             mapper.registerModule(new JavaTimeModule()); // Fix for Instant
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true);
             mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);

@@ -14,8 +14,8 @@ import util.DBConnection;
 public class UserAuthenticationDAOImpl implements UserAuthenticationDAO{
 
 	private static final String FETCH_CREDENTIALS_QUERY = "SELECT user_id, email, password, role FROM users WHERE email = ?";
-	private static final String INSERT_USER_QUERY = "INSERT INTO users (first_name, last_name, email, gender, password, phone, date_of_birth, role)\r\n"
-			+ "VALUES (?, ?, ?, ?::gender_enum, ?, ?, ?, ?::user_role);";
+	private static final String INSERT_USER_QUERY = "INSERT INTO users (first_name, last_name, email, gender, password, role)\r\n"
+			+ "VALUES (?, ?, ?, ?::gender_enum, ?, ?::user_role);";
 	
 	public Optional<UserCredentials> fetchUserCredentials(UserCredentials loginCredentials){
 	    try {
@@ -39,7 +39,6 @@ public class UserAuthenticationDAOImpl implements UserAuthenticationDAO{
 	    }
 	}
 
-
 	@Override
 	public int addNewUser(UserDetails userDetails) {
 		try {
@@ -60,9 +59,7 @@ public class UserAuthenticationDAOImpl implements UserAuthenticationDAO{
 			statement.setString(3, details.email());
 			statement.setString(4, details.gender().name());
 			statement.setString(5, details.getPasswordHash());
-			statement.setString(6, details.phone());
-			statement.setDate(7, java.sql.Date.valueOf(details.dateOfBirth()));
-			statement.setString(8, Role.USER.name());
+			statement.setString(6, Role.USER.name());
 		} catch (SQLException sqlException) {
 			throw new DAOException(sqlException.getMessage(), sqlException.getCause());
 		}
