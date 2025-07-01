@@ -25,14 +25,22 @@ public class Search extends HttpServlet {
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		SearchParams searchParams = getSearchParams(request);
-		List<NewsArticle> articles = searchService.getArticles(searchParams);
 		Response<List<NewsArticle>> searchResponse;
 		
-		if(articles.isEmpty()) {
-			searchResponse = new Response<>(true, "No articles found", Optional.empty());
+		try {
+			List<NewsArticle> articles = searchService.getArticles(searchParams);
+			response.setStatus(200);
+			
+			if(articles.isEmpty()) {
+				searchResponse = new Response<>(true, "No articles found", Optional.empty());
+			} else {
+				String responseMessage = "Found " + articles.size() + " articles";
+				searchResponse = new Response<>(true, responseMessage, Optional.of(articles));
+			}
+		} catch(RuntimeException runtimeException) {
+			response.setStatus(500);
+			searchResponse = new Response<>(false, runtimeException.getMessage(), Optional.empty());
 		}
-		searchResponse = new Response<>(true, "", Optional.of(articles));
-		response.setStatus(200);
 		
 		HttpServletResponseHelper.buildHttpServletResponse(response, searchResponse)
         .orElseGet(() -> {
