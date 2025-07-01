@@ -8,7 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 public class HttpServletResponseHelper {
-	public static Optional<HttpServletResponse> buildHttpServletResponse(HttpServletResponse httpResponse, Response<Void> response) {
+	public static <T> Optional<HttpServletResponse> buildHttpServletResponse(HttpServletResponse httpResponse, Response<T> response) {
 		ObjectMapper mapper = SingletonObjectMapper.getInstance();
 		String jsonResponseString;
 		httpResponse.setContentType("application/json");
@@ -34,4 +34,5 @@ public class HttpServletResponseHelper {
 			return Optional.empty();
 		}
 	}
+	
 }
