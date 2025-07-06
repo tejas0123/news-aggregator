@@ -52,4 +52,24 @@
     <servlet-name>Search</servlet-name>
     <url-pattern>/api/v1/articles</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>SaveArticle</display-name>
+    <servlet-name>SaveArticle</servlet-name>
+    <servlet-class>servlets.SaveArticle</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>SaveArticle</servlet-name>
+    <url-pattern>/api/v1/articles/saved</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>ArticlesMetadata</display-name>
+    <servlet-name>ArticlesMetadata</servlet-name>
+    <servlet-class>servlets.ArticlesMetadata</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ArticlesMetadata</servlet-name>
+    <url-pattern>/api/v1/articles/metadata</url-pattern>
+  </servlet-mapping>
 </web-app>

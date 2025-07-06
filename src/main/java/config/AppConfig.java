@@ -1,12 +1,20 @@
 package config;
 
+import dao.ArticlesMetadataDAO;
+import dao.ArticlesMetadataDAOImpl;
 import dao.NewsAPIDAO;
+import dao.SavedArticleDAO;
+import dao.SavedArticleDAOImpl;
 import dao.SearchServiceDAO;
 import dao.SearchServiceDAOImpl;
 import dao.UserAuthenticationDAO;
 import dao.UserAuthenticationDAOImpl;
 import newsprovider.NewsAPIRequest;
 import newsprovider.NewsAPIRequestImpl;
+import service.ArticlesMetadataService;
+import service.ArticlesMetadataServiceImpl;
+import service.SavedArticlesService;
+import service.SavedArticlesServiceImpl;
 import service.SearchService;
 import service.SearchServiceImpl;
 import service.UserAuthenticationService;
@@ -19,6 +27,10 @@ public class AppConfig {
     private static NewsAPIRequest newsAPIRequest = null;
     private static SearchService searchService = null;
     private static SearchServiceDAO searchServiceDAO = null;
+    private static SavedArticlesService savedArticlesService = null;
+    private static SavedArticleDAO savedArticleDAO = null;
+    private static ArticlesMetadataService articlesMetadataService = null;
+    private static ArticlesMetadataDAO articlesMetadataDAO = null;
     
     private AppConfig() {
     	
@@ -59,5 +71,27 @@ public class AppConfig {
     		searchService = new SearchServiceImpl(searchServiceDAO);
     	}
     	return searchService;
+    }
+    
+    public static SavedArticlesService getSavedArticlesServiceInstance() {
+    	if(savedArticleDAO == null) {
+    		savedArticleDAO = new SavedArticleDAOImpl();
+    	}
+    	
+    	if(savedArticlesService == null) {
+    		savedArticlesService = new SavedArticlesServiceImpl(savedArticleDAO);
+    	}
+    	return savedArticlesService;
+    }
+    
+    public static ArticlesMetadataService getArticlesMetadataServiceInstance() {
+    	if(articlesMetadataDAO == null) {
+    		articlesMetadataDAO = new ArticlesMetadataDAOImpl();
+    	}
+    	
+    	if(articlesMetadataService == null) {
+    		articlesMetadataService = new ArticlesMetadataServiceImpl(articlesMetadataDAO);
+    	}
+    	return articlesMetadataService;
     }
 }

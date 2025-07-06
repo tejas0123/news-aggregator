@@ -25,12 +25,12 @@ public class SearchServiceDAOImpl implements SearchServiceDAO {
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement preparedStatement = conn.prepareStatement(searchQuery)) {
 
-            for (int i = 0; i < parameters.size(); i++) {
-            	Object param = parameters.get(i);
+            for (int index = 0; index < parameters.size(); index++) {
+            	Object param = parameters.get(index);
             	if (param instanceof java.time.Instant) {
-            	    preparedStatement.setTimestamp(i + 1, java.sql.Timestamp.from((java.time.Instant) param));
+            	    preparedStatement.setTimestamp(index + 1, java.sql.Timestamp.from((java.time.Instant) param));
             	} else {
-            	    preparedStatement.setObject(i + 1, param);
+            	    preparedStatement.setObject(index + 1, param);
             	}
             }
 
@@ -75,6 +75,7 @@ public class SearchServiceDAOImpl implements SearchServiceDAO {
             parameters.add(to.plusDays(1).atStartOfDay(ZoneOffset.UTC).toInstant());
         });
 
+        System.out.println(searchQuery.toString());
         return searchQuery.toString();
     }
 }
