@@ -5,7 +5,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.NewsArticle;
-import model.SearchParams;
 import service.SearchService;
 import util.HttpServletResponseHelper;
 import java.io.IOException;
@@ -14,17 +13,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import config.AppConfig;
+import dto.NewsArticleData;
 import dto.Response;
+import dto.SearchParams;
 
 public class Search extends HttpServlet {
 	private SearchService searchService = AppConfig.getSearchServiceInstance();
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		SearchParams searchParams = getSearchParams(request);
-		Response<List<NewsArticle>> searchResponse;
+		Response<List<NewsArticleData>> searchResponse;
 		
 		try {
-			List<NewsArticle> articles = searchService.getArticles(searchParams);
+			List<NewsArticleData> articles = searchService.getArticles(searchParams);
 			response.setStatus(HttpServletResponse.SC_OK);
 			
 			if(articles.isEmpty()) {

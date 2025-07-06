@@ -63,7 +63,7 @@ public class NewsAPIDAO implements NewsProviderDAO{
 
 	@Override
 	public Map<String, Integer> getNewsCategories() {
-		String GET_NEWS_CATEGORIES_QUERY = "SELECT category_id, name, is_active FROM news_categories WHERE is_active = true LIMIT 2";
+		String GET_NEWS_CATEGORIES_QUERY = "SELECT category_id, name, is_active FROM news_categories WHERE is_active = true LIMIT 6";
 		
 		try {
 			Connection connection = DBConnection.getConnection();
