@@ -9,10 +9,13 @@ import dto.UserDetails;
 import exception.DAOException;
 import exception.DuplicateUserException;
 import exception.UserNotFoundException;
+import jakarta.servlet.http.HttpServletResponse;
+import util.JwtUtil;
 
 public class UserAuthenticationServiceImpl implements UserAuthenticationService{
 	private UserAuthenticationDAO userAuthDAO;
-	
+	private final String AUTHORIZATION = "Authorization";
+	private final String BEARER = "Bearer ";
 	private static final String UNIQUE_CONSTRAINT_VIOLATION_STATE = "23505";
 	
 	public UserAuthenticationServiceImpl(UserAuthenticationDAO userAuthDAO) {
@@ -20,7 +23,7 @@ public class UserAuthenticationServiceImpl implements UserAuthenticationService{
 	}
 
 	@Override
-	public Response<Void> login(UserCredentials loginCredentials) {
+	public Response<Void> login(UserCredentials loginCredentials, HttpServletResponse response) {
 		Optional<UserCredentials> userCredentialsOptional = userAuthDAO.fetchUserCredentials(loginCredentials);
 
 	    UserCredentials userCredentials = userCredentialsOptional.orElseThrow(() -> 
@@ -30,6 +33,8 @@ public class UserAuthenticationServiceImpl implements UserAuthenticationService{
 	        throw new UserNotFoundException(Messages.INCORRECT_CREDENTIALS);
 	    }
 	    
+	    String jwtToken = JwtUtil.generateToken(userCredentials);
+		response.setHeader(AUTHORIZATION, BEARER + jwtToken);
 	    return new Response<>(true, Messages.LOGIN_SUCCESSFUL, Optional.empty());
 	}
 

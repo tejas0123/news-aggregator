@@ -1,7 +1,6 @@
 package servlets.search;
 
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -9,14 +8,11 @@ import model.NewsArticle;
 import model.SearchParams;
 import service.SearchService;
 import util.HttpServletResponseHelper;
-
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
 import config.AppConfig;
 import dto.Response;
 
@@ -25,18 +21,26 @@ public class Search extends HttpServlet {
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		SearchParams searchParams = getSearchParams(request);
-		List<NewsArticle> articles = searchService.getArticles(searchParams);
 		Response<List<NewsArticle>> searchResponse;
 		
-		if(articles.isEmpty()) {
-			searchResponse = new Response<>(true, "No articles found", Optional.empty());
+		try {
+			List<NewsArticle> articles = searchService.getArticles(searchParams);
+			response.setStatus(HttpServletResponse.SC_OK);
+			
+			if(articles.isEmpty()) {
+				searchResponse = new Response<>(true, "No articles found", Optional.empty());
+			} else {
+				String responseMessage = "Found " + articles.size() + " articles";
+				searchResponse = new Response<>(true, responseMessage, Optional.of(articles));
+			}
+		} catch(RuntimeException runtimeException) {
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			searchResponse = new Response<>(false, runtimeException.getMessage(), Optional.empty());
 		}
-		searchResponse = new Response<>(true, "", Optional.of(articles));
-		response.setStatus(200);
 		
 		HttpServletResponseHelper.buildHttpServletResponse(response, searchResponse)
         .orElseGet(() -> {
-            response.setStatus(500);
+        	response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             return response;
         });
 	}
@@ -48,7 +52,7 @@ public class Search extends HttpServlet {
 		Optional<String> keyword = getOptionalParam(request, "keyword");
 		Optional<LocalDate> from = getOptionalDateParam(request, "from");
 		Optional<LocalDate> to = getOptionalDateParam(request, "to");
-		
+		   
 		return new SearchParams(category, keyword, from, to);
 	}
 	
