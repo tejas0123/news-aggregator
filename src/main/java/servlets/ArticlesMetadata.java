@@ -9,10 +9,10 @@ import service.ArticlesMetadataService;
 import util.HttpServletResponseHelper;
 import util.SingletonObjectMapper;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import config.AppConfig;
@@ -23,12 +23,15 @@ public class ArticlesMetadata extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ObjectMapper mapper = SingletonObjectMapper.getInstance();
-		Response<List<ArticleMetadata>> getArticleMetadataResponse;
+		Response<List<ArticleMetadata>> getArticleMetadataResponse = null;;
 	
-		Set<Integer> articleIds = mapper.readValue(
-				request.getInputStream(), 
-				new TypeReference<Set<Integer>>() {}
-		);
+		Set<Integer> articleIds = getArticleIds(request, response, getArticleMetadataResponse);
+		if(articleIds.isEmpty()) {
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            getArticleMetadataResponse = new Response<>(false, "Invalid request", Optional.empty());
+            buildResponse(response, getArticleMetadataResponse);
+            return;
+		}
 		
 		try {
 			List<ArticleMetadata> articlesMetadata = articlesMetadataService.getArticlesMetadata(articleIds);
@@ -70,6 +73,24 @@ public class ArticlesMetadata extends HttpServlet {
         	response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             return response;
         });
+	}
+	
+	private Set<Integer> getArticleIds(HttpServletRequest request, HttpServletResponse response, Response<List<ArticleMetadata>> getArticleMetadataResponse){
+		String[] articleIdParams = request.getParameterValues("articleId");
+		Set<Integer> articleIds = new HashSet<>();
+
+        if (articleIdParams == null || articleIdParams.length == 0) {
+            return articleIds;
+        }
+
+        for (String idString : articleIdParams) {
+            try {
+                articleIds.add(Integer.parseInt(idString));
+            } catch (NumberFormatException numberFormatException) {
+                return new HashSet<>();
+            }
+        }
+        return articleIds;
 	}
 
 }

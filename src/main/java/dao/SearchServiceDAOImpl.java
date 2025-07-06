@@ -8,19 +8,30 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 
+import dto.NewsArticleData;
+import dto.SearchParams;
 import exception.DAOException;
 import model.NewsArticle;
-import model.SearchParams;
 import util.DBConnection;
 
 public class SearchServiceDAOImpl implements SearchServiceDAO {
 
     @Override
-    public List<NewsArticle> searchArticles(SearchParams searchParams) {
+    public List<NewsArticleData> searchArticles(SearchParams searchParams) {
+        StringBuilder getArticlesQuery = new StringBuilder("""
+                SELECT 
+                    a.article_id, a.title, a.url, a.description,
+                    COALESCE(m.likes, 0) AS likes,
+                    COALESCE(m.dislikes, 0) AS dislikes
+                FROM articles a
+                LEFT JOIN article_metadata m ON a.article_id = m.article_id
+                WHERE (m.is_hidden = FALSE OR m.is_hidden IS NULL)
+            """);
+        
         List<Object> parameters = new ArrayList<>();
-        StringBuilder queryBuilder = new StringBuilder("SELECT article_id, title, url, description FROM articles WHERE article_id IS NOT NULL");
-        String searchQuery = buildSearchQuery(queryBuilder, searchParams, parameters);
-        List<NewsArticle> newsArticles = new ArrayList<>();
+        
+        String searchQuery = buildSearchQuery(getArticlesQuery, searchParams, parameters);
+        List<NewsArticleData> newsArticles = new ArrayList<>();
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement preparedStatement = conn.prepareStatement(searchQuery)) {
@@ -36,12 +47,14 @@ public class SearchServiceDAOImpl implements SearchServiceDAO {
 
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                NewsArticle article = new NewsArticle();
-                article.setArticleId(resultSet.getInt("article_id"));
-                article.setTitle(resultSet.getString("title"));
-                article.setUrl(resultSet.getString("url"));
-                article.setDescription(resultSet.getString("description"));
-                newsArticles.add(article);
+            	NewsArticleData articleData = new NewsArticleData();
+            	articleData.setArticle_id(resultSet.getInt("article_id"));
+            	articleData.setTitle(resultSet.getString("title"));
+            	articleData.setUrl(resultSet.getString("url"));
+            	articleData.setDescription(resultSet.getString("description"));
+            	articleData.setLikes(resultSet.getInt("likes"));
+            	articleData.setDislikes(resultSet.getInt("dislikes"));
+                newsArticles.add(articleData);
             }
 
             return newsArticles;

@@ -4,9 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dao.SearchServiceDAO;
+import dto.NewsArticleData;
+import dto.SearchParams;
 import exception.DAOException;
 import model.NewsArticle;
-import model.SearchParams;
 
 public class SearchServiceImpl implements SearchService{
 	private SearchServiceDAO searchServiceDAO;
@@ -16,8 +17,8 @@ public class SearchServiceImpl implements SearchService{
 	}
 
 	@Override
-	public List<NewsArticle> getArticles(SearchParams searchParams) {
-		List<NewsArticle> newsArticles = new ArrayList<>();
+	public List<NewsArticleData> getArticles(SearchParams searchParams) {
+		List<NewsArticleData> newsArticles = new ArrayList<>();
 		
 		try {
 			newsArticles = searchServiceDAO.searchArticles(searchParams);
