@@ -20,52 +20,72 @@ public class ArticlesIO {
     GetSavedArticlesHandler getSavedArticlesHandler = AppConfig.getSaveArticlesHandlerInstance();
     ArticlesMetadataUpdateHandler articlesMetadataUpdateHandler = AppConfig.getMetadataUpdateHandlerInstance();
 
-    public void showHeadLines() {
-        System.out.println("Please choose from the options below");
-        System.out.println("1. Today");
-        System.out.println("2. Date Range");
-        System.out.println("3. Go Back");
-
+    public void searchArticles(String flag) {
         LocalDate fromDate = null;
         LocalDate toDate = null;
         String category = "";
+        Optional<String> keyword = Optional.empty();
 
-        int choice = getValidChoice(1, 3);
+        if (flag.equalsIgnoreCase("headlines")) {
+            System.out.println("Please choose from the options below");
+            System.out.println("1. Today");
+            System.out.println("2. Date Range");
+            System.out.println("3. Go Back");
 
-        switch (choice) {
-            case 1 -> {
-                fromDate = LocalDate.now().minusDays(1);
-                toDate = LocalDate.now();
+            int choice = getValidChoice(1, 3);
+
+            switch (choice) {
+                case 1 -> {
+                    fromDate = LocalDate.now().minusDays(1);
+                    toDate = LocalDate.now();
+                }
+                case 2 -> {
+                    fromDate = readDate("Enter start date in (yyyy-MM-dd) format: ");
+                    toDate = readDate("Enter end date in (yyyy-MM-dd) format: ");
+                }
+                case 3 -> {
+                    return;
+                }
+                default -> System.out.println("Invalid choice. Please try again.");
             }
-            case 2 -> {
-                fromDate = readDate("Enter start date in (yyyy-MM-dd) format: ");
-                toDate = readDate("Enter end date in (yyyy-MM-dd) format: ");
+
+            System.out.println("\nPlease choose the category for Headlines:");
+            System.out.println("1. All");
+            System.out.println("2. Business");
+            System.out.println("3. Entertainment");
+            System.out.println("4. Sports");
+            System.out.println("5. Technology");
+
+            int categoryChoice = getValidChoice(1, 5);
+
+            category = switch (categoryChoice) {
+                case 1 -> "business,entertainment,sports,technology";
+                case 2 -> "business";
+                case 3 -> "entertainment";
+                case 4 -> "sports";
+                case 5 -> "technology";
+                default -> "business,entertainment,sports,technology";
+            };
+        } else if (flag.equalsIgnoreCase("keywordSearch")) {
+            fromDate = readDate("Enter start date in (yyyy-MM-dd) format: ");
+            toDate = readDate("Enter end date in (yyyy-MM-dd) format: ");
+
+            System.out.print("Enter keyword to search articles: ");
+            String keywordInput = inputScanner.nextLine().trim();
+            if (!keywordInput.isEmpty()) {
+                keyword = Optional.of(keywordInput);
             }
-            case 3 -> {
-                return;
-            }
-            default -> System.out.println("Invalid choice choose from options");
+        } else {
+            System.out.println("Invalid mode. Exiting...");
+            return;
         }
 
-        System.out.println("\nPlease choose the options below for Headlines:");
-        System.out.println("1. All");
-        System.out.println("2. Business");
-        System.out.println("3. Entertainment");
-        System.out.println("4. Sports");
-        System.out.println("5. Technology");
-
-        int categoryChoice = getValidChoice(1, 5);
-
-        category = switch (categoryChoice) {
-            case 1 -> "business,entertainment,sports,technology";
-            case 2 -> "business";
-            case 3 -> "entertainment";
-            case 4 -> "sports";
-            case 5 -> "technology";
-            default -> "business,entertainment,sports,technology";
-        };
-
-        ArticleFilterParams params = new ArticleFilterParams(Optional.of(fromDate), Optional.of(toDate), Optional.of(category), Optional.empty());
+        ArticleFilterParams params = new ArticleFilterParams(
+                Optional.ofNullable(fromDate),
+                Optional.ofNullable(toDate),
+                flag.equalsIgnoreCase("headlines") ? Optional.of(category) : Optional.empty(),
+                keyword
+        );
 
         GetHeadlinesHandler handler = new GetHeadlinesHandler();
         APIResponse response = handler.sendAPIRequest(params);
@@ -89,6 +109,7 @@ public class ArticlesIO {
             System.out.println("Failed to fetch articles. " + response.message());
         }
     }
+
 
     private int getValidChoice(int min, int max) {
         while (true) {

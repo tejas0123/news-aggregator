@@ -4,6 +4,7 @@ import com.itt.newsaggregatorclient.api.PostRequestsHandler;
 import com.itt.newsaggregatorclient.api.articles.ArticlesMetadataUpdateHandler;
 import com.itt.newsaggregatorclient.api.articles.GetSavedArticlesHandler;
 import com.itt.newsaggregatorclient.api.auth.LoginHandler;
+import com.itt.newsaggregatorclient.api.auth.SignupHandler;
 import com.itt.newsaggregatorclient.io.ArticlesIO;
 import com.itt.newsaggregatorclient.io.MainMenu;
 
@@ -13,12 +14,20 @@ public class AppConfig {
     private static ArticlesIO articlesIO = null;
     private static GetSavedArticlesHandler getSavedArticlesHandler = null;
     private static ArticlesMetadataUpdateHandler articlesMetadataUpdateHandler = null;
+    private static SignupHandler signupHandler = null;
 
-    public static PostRequestsHandler getLoginHandler(){
+    public static PostRequestsHandler getLoginHandlerInstance(){
         if(loginHandler == null){
             loginHandler = new LoginHandler();
         }
         return loginHandler;
+    }
+
+    public static SignupHandler getSignupHandlerInstance(){
+        if(signupHandler == null){
+            signupHandler = new SignupHandler();
+        }
+        return signupHandler;
     }
 
     public static MainMenu getMainMenuInstance(){
