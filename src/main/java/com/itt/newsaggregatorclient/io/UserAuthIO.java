@@ -2,11 +2,14 @@ package com.itt.newsaggregatorclient.io;
 
 import com.itt.newsaggregatorclient.AppConfig;
 import com.itt.newsaggregatorclient.api.PostRequestsHandler;
+import com.itt.newsaggregatorclient.api.auth.SignupHandler;
 import com.itt.newsaggregatorclient.constants.Constants;
 import com.itt.newsaggregatorclient.constants.Messages;
 import com.itt.newsaggregatorclient.constants.Prompts;
 import com.itt.newsaggregatorclient.dto.APIResponse;
+import com.itt.newsaggregatorclient.dto.Gender;
 import com.itt.newsaggregatorclient.dto.UserCredentials;
+import com.itt.newsaggregatorclient.dto.UserDetails;
 import com.itt.newsaggregatorclient.util.SingletonScanner;
 import com.itt.newsaggregatorclient.validator.InputValidator;
 
@@ -51,7 +54,7 @@ public class UserAuthIO {
 
     private boolean initiateLogin(){
         UserCredentials userCredentials = getLoginCredentials();
-        PostRequestsHandler loginAPIHandler = AppConfig.getLoginHandler();
+        PostRequestsHandler loginAPIHandler = AppConfig.getLoginHandlerInstance();
         APIResponse loginResponse = loginAPIHandler.sendAPIRequest(userCredentials);
         System.out.println(loginResponse);
         return loginResponse.success();
@@ -80,7 +83,59 @@ public class UserAuthIO {
         return new UserCredentials(email, password);
     }
 
-    private void initiateSignup(){
-        System.out.println("Starting signup");
+    private void initiateSignup() {
+        UserDetails userDetails = getUserDetails();
+        SignupHandler signupHandler = AppConfig.getSignupHandlerInstance();
+        APIResponse response = signupHandler.sendAPIRequest(userDetails);
+        if(response.success()){
+            System.out.println();
+            System.out.println("Signup successful. Continue to login");
+            System.out.println("__________________________________________________________");
+        } else{
+            System.out.println(response.message());
+        }
     }
+
+    private UserDetails getUserDetails() {
+        System.out.println(Prompts.FIRST_NAME_PROMPT);
+        String firstName = inputScanner.nextLine().trim();
+
+        System.out.println(Prompts.LAST_NAME_PROMPT);
+        String lastName = inputScanner.nextLine().trim();
+
+        String email;
+        while (true) {
+            System.out.println(Prompts.EMAIL_PROMPT);
+            email = inputScanner.nextLine().trim();
+            if (InputValidator.isEmailValid(email)) break;
+            System.out.println(Messages.INVALID_EMAIL);
+        }
+
+        Gender gender = getGenderChoice();
+
+        System.out.println(Prompts.PASSWORD_PROMPT);
+        String password = inputScanner.nextLine();
+
+        return new UserDetails(firstName, lastName, email, gender, password);
+    }
+
+    private Gender getGenderChoice() {
+        while (true) {
+            System.out.println("Select Gender:");
+            System.out.println("1. MALE");
+            System.out.println("2. FEMALE");
+            System.out.println("3. OTHER");
+            System.out.print("Enter choice (1-3): ");
+            String choice = inputScanner.nextLine().trim();
+
+            switch (choice) {
+                case "1" -> { return Gender.MALE; }
+                case "2" -> { return Gender.FEMALE; }
+                case "3" -> { return Gender.OTHER; }
+                default -> System.out.println("Invalid choice. Please enter 1, 2, or 3.");
+            }
+        }
+    }
+
+
 }

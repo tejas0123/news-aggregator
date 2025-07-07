@@ -25,14 +25,23 @@ public class GetHeadlinesHandler implements GetRequestsHandler<List<NewsArticleD
         return URI.create(uriString);
     }
 
-    @Override
     public APIResponse sendAPIRequest(Object params) {
-        ArticleFilterParams articleFilterParams = (ArticleFilterParams)params;
-        String uriString= Constants.BASE_URL + "/api/v1/articles?" + "from=" + articleFilterParams.from().get() +
-                "&to=" +articleFilterParams.to().get() +
-                "&category=" + articleFilterParams.category().get();
+        ArticleFilterParams articleFilterParams = (ArticleFilterParams) params;
 
-        URI uri = buildUri(uriString);
+        StringBuilder uriBuilder = new StringBuilder(Constants.BASE_URL)
+                .append("/api/v1/articles?")
+                .append("from=").append(articleFilterParams.from().get())
+                .append("&to=").append(articleFilterParams.to().get());
+
+        articleFilterParams.category().ifPresent(category ->
+                uriBuilder.append("&category=").append(category)
+        );
+
+        articleFilterParams.keyword().ifPresent(keyword ->
+            uriBuilder.append("&keyword=").append(keyword)
+        );
+
+        URI uri = buildUri(uriBuilder.toString());
 
         Map<String, String> headers = new HashMap<>();
         headers.put("Authorization", "Bearer " + JwtUtil.getToken());
@@ -64,6 +73,7 @@ public class GetHeadlinesHandler implements GetRequestsHandler<List<NewsArticleD
             );
         }
     }
+
 
     @Override
     public Optional<List<NewsArticleData>> extractResponseData(String body) {

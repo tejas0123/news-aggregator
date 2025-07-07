@@ -58,12 +58,12 @@ public class MainMenu {
     private boolean handleUserChoice(int input, Map<String, String> userDetails) {
         switch (input) {
             case 1:
-                articlesIO.showHeadLines();
+                articlesIO.searchArticles("headlines");
                 break;
             case 2:
                 break;
             case 3:
-                //searchArticles(userDetails);
+                articlesIO.searchArticles("keywordSearch");
                 break;
             case 4:
                 //showNotifications(userDetails);

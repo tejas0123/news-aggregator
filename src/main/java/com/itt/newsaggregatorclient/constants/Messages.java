@@ -7,4 +7,7 @@ public class Messages {
     public static final String INVALID_EMAIL = "Invalid email. Enter a valid email";
     public static final String USER_NOT_FOUND = "User not found";
     public static final String INVALID_INPUT = "Invalid input. Please enter a valid input";
+    public static final String INVALID_GENDER = "Invalid gender entered. Please try again.";
+    public static final String SIGNUP_SUCCESS = "Signup successful. You can now log in.";
+    public static final String SIGNUP_FAILED = "Signup failed. Please try again.";
 }
