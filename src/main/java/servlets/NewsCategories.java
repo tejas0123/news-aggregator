@@ -44,31 +44,40 @@ public class NewsCategories extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Response<Void> addCategoryResponse;
+		Response<Void> apiResponse;
 		
 		if(!isUserAuthorized(request)) {
 			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-			addCategoryResponse = new Response<>(false, Messages.UNAUTHORIZED_OPERATION,Optional.empty());
-			buildResponse(response, addCategoryResponse);
+			apiResponse = new Response<>(false, Messages.UNAUTHORIZED_OPERATION,Optional.empty());
+			buildResponse(response, apiResponse);
 			return;
 		}
 		
 		try {
             ObjectMapper mapper = SingletonObjectMapper.getInstance();
-            Map<String, List<String>> categoryWithKeywords = mapper.readValue(
-                    request.getInputStream(), new TypeReference<Map<String, List<String>>>() {}
-            );
-
-            newsCategoriesServiceWithDAO.addCategory(categoryWithKeywords);
-            response.setStatus(HttpServletResponse.SC_CREATED);
-            addCategoryResponse = new Response<>(true, "Category added successfully", Optional.empty());
+            if(request.getRequestURI().endsWith("/blocked")) {
+            	Set<String> wordsToBlock = mapper.readValue(
+            			request.getInputStream(), new TypeReference<Set<String>>() {}
+            	);
+            	newsCategoriesServiceWithDAO.addWordsToBlock(wordsToBlock);
+            	response.setStatus(HttpServletResponse.SC_CREATED);
+            	apiResponse = new Response<>(true, "Words Added successfully", Optional.empty());
+            }
+            else {
+            	Map<String, List<String>> categoryWithKeywords = mapper.readValue(
+                        request.getInputStream(), new TypeReference<Map<String, List<String>>>() {}
+                );
+            	newsCategoriesServiceWithDAO.addCategory(categoryWithKeywords);
+                response.setStatus(HttpServletResponse.SC_CREATED);
+                apiResponse = new Response<>(true, "Category added successfully", Optional.empty());
+            }
             
         } catch (RuntimeException runTimeException) {
         	runTimeException.printStackTrace();
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            addCategoryResponse = new Response<>(false, runTimeException.getMessage(), Optional.empty());
+            apiResponse = new Response<>(false, runTimeException.getMessage(), Optional.empty());
         }
-		buildResponse(response, addCategoryResponse);
+		buildResponse(response, apiResponse);
 	}
 	
 	@Override

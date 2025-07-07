@@ -103,7 +103,6 @@ public class NotificationPreferences extends HttpServlet {
         }
 	}
 	
-	
 	private Set<String> getCategoryIds(HttpServletRequest request){
 		String[] categoryParams = request.getParameterValues("category");
 		Set<String> categories = new HashSet<>();

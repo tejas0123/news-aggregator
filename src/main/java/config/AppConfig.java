@@ -11,6 +11,8 @@ import dao.SavedArticleDAO;
 import dao.SavedArticleDAOImpl;
 import dao.SearchServiceDAO;
 import dao.SearchServiceDAOImpl;
+import dao.ServerDAO;
+import dao.ServerDAOImpl;
 import dao.UserAuthenticationDAO;
 import dao.UserAuthenticationDAOImpl;
 import newsprovider.NewsAPIRequest;
@@ -25,6 +27,8 @@ import service.SavedArticlesService;
 import service.SavedArticlesServiceImpl;
 import service.SearchService;
 import service.SearchServiceImpl;
+import service.ServerService;
+import service.ServerServiceImpl;
 import service.UserAuthenticationService;
 import service.UserAuthenticationServiceImpl;
 
@@ -43,6 +47,8 @@ public class AppConfig {
     private static NotificationPreferenceService notificationPreferenceService = null;
     private static NewsCategoriesService newsCategoriesService = null;
     private static NewsCategoriesDAO newsCategoriesDAO = null;
+    private static ServerDAO serverDAO = null;
+    private static ServerService serverService = null;
     
     private AppConfig() {
     	
@@ -136,5 +142,15 @@ public class AppConfig {
     		newsCategoriesService = new NewsCategoriesServiceImpl(newsCategoriesDAO);
     	}
     	return newsCategoriesService;
+    }
+    
+    public static ServerService getServerServiceInstance() {
+    	if(serverDAO == null) {
+    		serverDAO = new ServerDAOImpl();
+    	}
+    	if(serverService == null) {
+    		serverService = new ServerServiceImpl(serverDAO);
+    	}
+    	return serverService;
     }
 }

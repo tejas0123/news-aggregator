@@ -30,8 +30,13 @@ public class NewsCategoriesServiceImpl implements NewsCategoriesService{
 	}
 
 	@Override
-	public boolean disableCategory(Set<Integer> categoryIds) {
+	public boolean disableCategory(Set<Integer> categoryIds) {                                                                                                                                                                                                                
 		return newsCategoriesDAO.disableNewsCategory(categoryIds);
+	}
+
+	@Override
+	public boolean addWordsToBlock(Set<String> wordsToBlock) {
+		return newsCategoriesDAO.addWordsToBlock(wordsToBlock);
 	}
 	
 }

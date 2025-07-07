@@ -82,4 +82,30 @@ public class NewsCategoriesDAOImpl implements NewsCategoriesDAO{
 	        throw new DAOException(sqlException.getMessage(), sqlException.getCause());
 	    }
 	}
+
+	@Override
+	public boolean addWordsToBlock(Set<String> wordsToBlock) {
+		if (wordsToBlock == null || wordsToBlock.isEmpty()) {
+	        return false; 
+	    }
+		
+		String addWordsToBlockQuery = "INSERT into blocked_words (word) VALUES(?) ON CONFLICT DO NOTHING";
+		
+		try {
+			Connection connection = DBConnection.getConnection();
+			PreparedStatement preparedStatement = connection.prepareStatement(addWordsToBlockQuery);
+			for(String word : wordsToBlock) {
+				preparedStatement.setString(1, word);
+				preparedStatement.addBatch();
+			}
+			
+			int[] rowsAffected = preparedStatement.executeBatch();
+			return Arrays.stream(rowsAffected).anyMatch(count -> count >= 1);
+		} catch (SQLException sqlException) {
+	        sqlException.printStackTrace();
+	        throw new DAOException(sqlException.getMessage(), sqlException.getCause());
+	    }
+	}
+	
+	
 }

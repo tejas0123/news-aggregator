@@ -82,4 +82,18 @@
     <servlet-name>NewsCategories</servlet-name>
     <url-pattern>/api/v1/admin/categories</url-pattern>
   </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>NewsCategories</servlet-name>
+    <url-pattern>/api/v1/admin/categories/words/blocked</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>ServerOperations</display-name>
+    <servlet-name>ServerOperations</servlet-name>
+    <servlet-class>servlets.ServerOperations</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ServerOperations</servlet-name>
+    <url-pattern>/api/v1/admin/server</url-pattern>
+  </servlet-mapping>
 </web-app>
