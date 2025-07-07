@@ -5,6 +5,7 @@ import com.itt.newsaggregatorclient.api.articles.ArticlesMetadataUpdateHandler;
 import com.itt.newsaggregatorclient.api.articles.GetHeadlinesHandler;
 import com.itt.newsaggregatorclient.api.articles.GetSavedArticlesHandler;
 import com.itt.newsaggregatorclient.api.articles.PostUserSavedArticlesHandler;
+import com.itt.newsaggregatorclient.api.articles.UnsaveArticlesHandler;
 import com.itt.newsaggregatorclient.dto.APIResponse;
 import com.itt.newsaggregatorclient.dto.ArticleFilterParams;
 import com.itt.newsaggregatorclient.dto.ArticleMetadata;
@@ -21,6 +22,8 @@ public class ArticlesIO {
     PostUserSavedArticlesHandler postUserSavedArticlesHandler = AppConfig.getUserSavedArticlesHandler();
     ArticlesMetadataUpdateHandler articlesMetadataUpdateHandler = AppConfig.getMetadataUpdateHandlerInstance();
     GetSavedArticlesHandler getSavedArticlesHandler = AppConfig.getSavedArticlesHandlerInstance();
+    SavedArticlesIO savedArticlesIO = AppConfig.getSavedArticlesIOInstance();
+    UnsaveArticlesHandler unsaveArticlesHandler = AppConfig.getUnsaveArticlesHandlerInstance();
 
     public void searchArticles(String searchEntity) {
         LocalDate fromDate = null;
@@ -105,28 +108,27 @@ public class ArticlesIO {
                     updateArticlesData();
                 }
             } else {
-                System.out.println("Failed to parse article data.");
+                System.out.println("Failed to parse article data. No articles found");
             }
         } else {
-            System.out.println("Failed to fetch articles. " + response.message());
+            System.out.println(response.message());
         }
     }
 
     public void getUserSavedArticles(){
         APIResponse apiResponse = getSavedArticlesHandler.sendAPIRequest("");
-        if(apiResponse.success()){
-
-            Optional<List<NewsArticleData>> savedArticlesOptional = getSavedArticlesHandler.extractResponseData(apiResponse.body());
-
-            if(savedArticlesOptional.isPresent()){
-                List<NewsArticleData> savedArticles = savedArticlesOptional.get();
-                System.out.println();
-                System.out.println("Fetched saved articles");
-                System.out.println("___________________________________________________");
-            } else{
-                System.out.println("No saved articles to show");
-                System.out.println(apiResponse.message());
-            }
+        if (apiResponse.success()) {
+            getSavedArticlesHandler.extractResponseData(apiResponse.body())
+                .ifPresentOrElse(articles -> {
+                    if (articles.isEmpty()) {
+                        System.out.println("No articles found.");
+                    } else {
+                        savedArticlesIO.printSavedArticles(0, articles);
+                        unsaveArticles();
+                    }
+                }, () -> System.out.println("Failed to parse article data. No articles found"));
+        } else {
+            System.out.println(apiResponse.message());
         }
     }
 
@@ -161,13 +163,26 @@ public class ArticlesIO {
         Set<Integer> userSavedArticleIds = userInteractionIO.getUserSavedArticleIds();
         if(!userSavedArticleIds.isEmpty()){
             APIResponse saveArticlesResponse = postUserSavedArticlesHandler.sendAPIRequest(userSavedArticleIds);
-            System.out.println(saveArticlesResponse);
+            System.out.println(saveArticlesResponse.message());
         }
 
-        List<ArticleMetadata> updatedArticlesMetadata = userInteractionIO.getModifiedMetadata();
+        updateArticlesMetadata(userInteractionIO.getModifiedMetadata());
+    }
+
+    private void unsaveArticles(){
+        Set<Integer> unsavedArticleIds = savedArticlesIO.getSavedArticlesToRemove();
+        if(!unsavedArticleIds.isEmpty()){
+            APIResponse unsaveArticlesResponse = unsaveArticlesHandler.sendAPIRequest(unsavedArticleIds);
+            System.out.println(unsaveArticlesResponse.message());
+        }
+
+        updateArticlesMetadata(savedArticlesIO.getModifiedMetadata());
+    }
+
+    private void updateArticlesMetadata(List<ArticleMetadata> updatedArticlesMetadata){
         if(!updatedArticlesMetadata.isEmpty()){
             APIResponse metadataUpdateResponse = articlesMetadataUpdateHandler.sendAPIRequest(updatedArticlesMetadata);
-            System.out.println(metadataUpdateResponse);
+            System.out.println(metadataUpdateResponse.message());
         }
     }
 }

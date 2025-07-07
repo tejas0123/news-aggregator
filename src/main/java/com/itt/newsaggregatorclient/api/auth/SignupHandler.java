@@ -6,7 +6,6 @@ import com.itt.newsaggregatorclient.constants.Constants;
 import com.itt.newsaggregatorclient.dto.APIResponse;
 import com.itt.newsaggregatorclient.dto.Response;
 import com.itt.newsaggregatorclient.dto.UserDetails;
-
 import java.net.URI;
 import java.net.http.HttpRequest;
 import java.util.HashMap;

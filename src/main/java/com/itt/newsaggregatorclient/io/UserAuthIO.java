@@ -12,7 +12,6 @@ import com.itt.newsaggregatorclient.dto.UserCredentials;
 import com.itt.newsaggregatorclient.dto.UserDetails;
 import com.itt.newsaggregatorclient.util.SingletonScanner;
 import com.itt.newsaggregatorclient.validator.InputValidator;
-
 import java.util.Scanner;
 
 public class UserAuthIO {
@@ -22,6 +21,7 @@ public class UserAuthIO {
     public void startApplication(){
         boolean isLoggedIn = false;
         System.out.println("Welcome to the News Aggregator application.");
+        System.out.println("______________________________________________________________");
 
         while(!isLoggedIn){
             System.out.println(Prompts.USER_AUTH_PROMPT);
@@ -56,7 +56,7 @@ public class UserAuthIO {
         UserCredentials userCredentials = getLoginCredentials();
         PostRequestsHandler loginAPIHandler = AppConfig.getLoginHandlerInstance();
         APIResponse loginResponse = loginAPIHandler.sendAPIRequest(userCredentials);
-        System.out.println(loginResponse);
+        System.out.println(loginResponse.message());
         return loginResponse.success();
     }
 
@@ -136,6 +136,4 @@ public class UserAuthIO {
             }
         }
     }
-
-
 }

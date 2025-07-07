@@ -7,8 +7,8 @@ import java.util.*;
 
 public class ArticleUserInteractionIO {
     Scanner scanner = SingletonScanner.getScannerInstance();
-    private final Set<Integer> userSavedArticleIds;
-    private final Map<Integer, ArticleMetadata> articleMetadataMap;
+    private Set<Integer> userSavedArticleIds;
+    private Map<Integer, ArticleMetadata> articleMetadataMap;
 
     public ArticleUserInteractionIO() {
         userSavedArticleIds = new HashSet<>();
@@ -66,7 +66,7 @@ public class ArticleUserInteractionIO {
         printArticles(index, articleDataList);
     }
 
-    private void printArticleContents(NewsArticleData articleData) {
+    protected void printArticleContents(NewsArticleData articleData) {
         System.out.println("____________________________________________________________________________");
         System.out.println("\nTitle: " + articleData.getTitle());
         System.out.println("Description: " + articleData.getDescription());
@@ -75,21 +75,21 @@ public class ArticleUserInteractionIO {
         System.out.println("____________________________________________________________________________");
     }
 
-    private void likeArticle(int articleId) {
+    protected void likeArticle(int articleId) {
         ArticleMetadata metadata = articleMetadataMap.getOrDefault(articleId, new ArticleMetadata(articleId, 0, 0, 0));
         metadata = new ArticleMetadata(articleId, 1, 0, metadata.getReports());
         articleMetadataMap.put(articleId, metadata);
         System.out.println("Liked the article.");
     }
 
-    private void dislikeArticle(int articleId) {
+    protected void dislikeArticle(int articleId) {
         ArticleMetadata metadata = articleMetadataMap.getOrDefault(articleId, new ArticleMetadata(articleId, 0, 0, 0));
         metadata = new ArticleMetadata(articleId, 0, 1, metadata.getReports());
         articleMetadataMap.put(articleId, metadata);
         System.out.println("Disliked the article.");
     }
 
-    private void reportArticle(int articleId) {
+    protected void reportArticle(int articleId) {
         ArticleMetadata metadata = articleMetadataMap.getOrDefault(articleId, new ArticleMetadata(articleId, 0, 0, 0));
         metadata = new ArticleMetadata(articleId, metadata.getLikes(), metadata.getDislikes(), 1);
         articleMetadataMap.put(articleId, metadata);

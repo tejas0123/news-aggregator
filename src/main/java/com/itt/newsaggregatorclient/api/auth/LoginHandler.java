@@ -46,11 +46,9 @@ public class LoginHandler implements PostRequestsHandler {
 
             if (authHeader.isPresent()) {
                 String token = authHeader.get().substring(7);
-                System.out.println("Printing token: " + token);
                 JwtUtil.saveToken(token);
             }
 
-            System.out.println(httpResponse);
             Response<T> response = mapper.readValue(jsonString, typeReference);
 
             System.out.println(response);

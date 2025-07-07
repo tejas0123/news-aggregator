@@ -10,7 +10,6 @@ import com.itt.newsaggregatorclient.dto.NewsArticleData;
 import com.itt.newsaggregatorclient.dto.Response;
 import com.itt.newsaggregatorclient.util.JwtUtil;
 import com.itt.newsaggregatorclient.util.SingletonObjectMapper;
-
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpRequest;
@@ -23,7 +22,7 @@ import java.util.Optional;
 public class GetSavedArticlesHandler implements  GetRequestsHandler<List<NewsArticleData>> {
     @Override
     public URI buildUri(String uriString) {
-        return null;
+        return URI.create(uriString + "/api/v1/articles/saved");
     }
 
     @Override

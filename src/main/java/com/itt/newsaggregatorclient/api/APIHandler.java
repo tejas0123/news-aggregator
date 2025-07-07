@@ -1,6 +1,5 @@
 package com.itt.newsaggregatorclient.api;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itt.newsaggregatorclient.dto.APIResponse;
@@ -13,7 +12,6 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.Optional;
 
 public interface APIHandler{
     URI buildUri(String uriString);
@@ -29,6 +27,7 @@ public interface APIHandler{
 
         try {
             HttpResponse<String> httpResponse = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+            System.out.println(httpResponse);
             ObjectMapper mapper = SingletonObjectMapper.getInstance();
             String jsonString = httpResponse.body();
 
@@ -49,20 +48,4 @@ public interface APIHandler{
             );
         }
     }
-
-
-//    default Optional<String> sendRequest(HttpRequest httpRequest){
-//        HttpClient client = HttpClient.newHttpClient();
-//
-//        try {
-//            HttpResponse<String> httpResponse = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-//            ObjectMapper mapper = SingletonObjectMapper.getInstance();
-//            String jsonString = httpResponse.body();
-//            return Optional.of(jsonString);
-//
-//        } catch (IOException | InterruptedException exception) {
-//            System.out.println(exception.getStackTrace());
-//            return Optional.empty();
-//        }
-//    }
 }

@@ -3,7 +3,6 @@ package com.itt.newsaggregatorclient.api;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itt.newsaggregatorclient.util.SingletonObjectMapper;
-
 import java.net.URI;
 import java.net.http.HttpRequest;
 import java.util.Map;

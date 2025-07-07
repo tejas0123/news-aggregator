@@ -1,13 +1,10 @@
 package com.itt.newsaggregatorclient.io;
 
 import com.itt.newsaggregatorclient.AppConfig;
-import com.itt.newsaggregatorclient.api.articles.GetSavedArticlesHandler;
-import com.itt.newsaggregatorclient.dto.APIResponse;
 import com.itt.newsaggregatorclient.util.JwtUtil;
 import com.itt.newsaggregatorclient.util.SingletonScanner;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
-
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,6 +14,7 @@ import java.util.Scanner;
 public class MainMenu {
     Scanner inputScanner = SingletonScanner.getScannerInstance();
     ArticlesIO articlesIO = AppConfig.getArticlesIOInstance();
+    AdminIO adminIO = AppConfig.getAdminIOInstance();
     public void displayMenu(){
         try{
             Map<String, String> userDetails = getUserDetails();
@@ -63,12 +61,12 @@ public class MainMenu {
                 articlesIO.searchArticles("headlines");
                 break;
             case 2:
+                articlesIO.getUserSavedArticles();
                 break;
             case 3:
                 articlesIO.searchArticles("keywordSearch");
                 break;
             case 4:
-                articlesIO.getUserSavedArticles();
                 break;
             case 5:
                 return true;
@@ -79,7 +77,7 @@ public class MainMenu {
     }
 
     private void adminMenu(Map<String, String> userDetails){
-
+        adminIO.printAdminMenu();
     }
 
     private Map<String, String> getUserDetails(){

@@ -7,7 +7,6 @@ import com.itt.newsaggregatorclient.dto.APIResponse;
 import com.itt.newsaggregatorclient.dto.ArticleMetadata;
 import com.itt.newsaggregatorclient.dto.Response;
 import com.itt.newsaggregatorclient.util.JwtUtil;
-
 import java.net.URI;
 import java.net.http.HttpRequest;
 import java.util.HashMap;
