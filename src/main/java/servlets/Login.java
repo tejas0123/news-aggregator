@@ -1,4 +1,4 @@
-package servlets.auth;
+package servlets;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;

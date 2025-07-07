@@ -8,35 +8,44 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
+import java.util.Set;
+import dto.NewsArticleData;
 import exception.DAOException;
-import model.NewsArticle;
 import util.DBConnection;
 
 public class SavedArticleDAOImpl implements SavedArticleDAO{
 	
 	
 	@Override
-    public List<NewsArticle> getSavedArticlesByUser(int userId) {
-        List<NewsArticle> articles = new ArrayList<>();
+    public List<NewsArticleData> getSavedArticlesByUser(int userId) {
+        List<NewsArticleData> articles = new ArrayList<>();
         String getArticlesQuery = """
-            SELECT a.article_id, a.title, a.url, a.description
-            FROM articles a
-            JOIN saved_articles sa ON a.article_id = sa.article_id
-            WHERE sa.user_id = ?
-            ORDER BY sa.saved_at DESC""";
+            SELECT 
+		    a.article_id, 
+		    a.title, 
+		    a.url, 
+		    a.description,
+		    COALESCE(am.likes, 0) AS likes,
+		    COALESCE(am.dislikes, 0) AS dislikes
+			FROM articles a
+			JOIN saved_articles sa ON a.article_id = sa.article_id
+			LEFT JOIN article_metadata am ON a.article_id = am.article_id
+			WHERE sa.user_id = ?
+			ORDER BY sa.saved_at DESC;""";
 
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(getArticlesQuery)) {
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(getArticlesQuery)) {
 
-            ps.setInt(1, userId);
-            ResultSet resultSet = ps.executeQuery();
+        	preparedStatement.setInt(1, userId);
+            ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                NewsArticle article = new NewsArticle();
-                article.setArticleId(resultSet.getInt("article_id"));
+                NewsArticleData article = new NewsArticleData();
+                article.setArticle_id(resultSet.getInt("article_id"));
                 article.setTitle(resultSet.getString("title"));
                 article.setUrl(resultSet.getString("url"));
                 article.setDescription(resultSet.getString("description"));
+                article.setLikes(resultSet.getInt("likes"));
+                article.setDislikes(resultSet.getInt("dislikes"));
                 articles.add(article);
             }
         } catch (SQLException sqlException) {
@@ -64,7 +73,7 @@ public class SavedArticleDAOImpl implements SavedArticleDAO{
     }
 
     @Override
-    public boolean deleteArticles(int userId, List<Integer> articleIds) {
+    public boolean deleteArticles(int userId, Set<Integer> articleIds) {
         String deleteArticleQuery = "DELETE FROM saved_articles WHERE user_id = ? AND article_id = ?";
 
         try (Connection conn = DBConnection.getConnection();
@@ -87,7 +96,7 @@ public class SavedArticleDAOImpl implements SavedArticleDAO{
 
 
 	@Override
-	public void saveArticle(int userId, List<Integer> articleIds) {
+	public void saveArticle(int userId, Set<Integer> articleIds) {
 		String saveArticleQuery = "INSERT INTO saved_articles(user_id, article_id) VALUES (?, ?) ON CONFLICT DO NOTHING";
 
         try (Connection conn = DBConnection.getConnection();

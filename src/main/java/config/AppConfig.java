@@ -3,6 +3,8 @@ package config;
 import dao.ArticlesMetadataDAO;
 import dao.ArticlesMetadataDAOImpl;
 import dao.NewsAPIDAO;
+import dao.NotificationPreferenceDAO;
+import dao.NotificationPreferenceDAOImpl;
 import dao.SavedArticleDAO;
 import dao.SavedArticleDAOImpl;
 import dao.SearchServiceDAO;
@@ -13,6 +15,8 @@ import newsprovider.NewsAPIRequest;
 import newsprovider.NewsAPIRequestImpl;
 import service.ArticlesMetadataService;
 import service.ArticlesMetadataServiceImpl;
+import service.NotificationPreferenceService;
+import service.NotificationPreferenceServiceImpl;
 import service.SavedArticlesService;
 import service.SavedArticlesServiceImpl;
 import service.SearchService;
@@ -31,6 +35,8 @@ public class AppConfig {
     private static SavedArticleDAO savedArticleDAO = null;
     private static ArticlesMetadataService articlesMetadataService = null;
     private static ArticlesMetadataDAO articlesMetadataDAO = null;
+    private static NotificationPreferenceDAO notificationPreferenceDAO = null;
+    private static NotificationPreferenceService notificationPreferenceService = null;
     
     private AppConfig() {
     	
@@ -93,5 +99,16 @@ public class AppConfig {
     		articlesMetadataService = new ArticlesMetadataServiceImpl(articlesMetadataDAO);
     	}
     	return articlesMetadataService;
+    }
+    
+    public static NotificationPreferenceService getNotificationPreferenceServiceInstance() {
+    	if(notificationPreferenceDAO == null) {
+    		notificationPreferenceDAO = new NotificationPreferenceDAOImpl();
+    	}
+    	
+    	if(notificationPreferenceService == null) {
+    		notificationPreferenceService = new NotificationPreferenceServiceImpl(notificationPreferenceDAO);
+    	}
+    	return notificationPreferenceService;
     }
 }

@@ -10,15 +10,16 @@ import service.SavedArticlesService;
 import util.HttpServletResponseHelper;
 import util.JwtUtil;
 import util.SingletonObjectMapper;
-
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-
+import java.util.Set;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import config.AppConfig;
+import dto.NewsArticleData;
 import dto.Response;
 import exception.DAOException;
 import io.jsonwebtoken.Claims;
@@ -33,10 +34,10 @@ public class SaveArticle extends HttpServlet {
 		
         Claims claims = JwtUtil.validateTokenAndGetSubject(jwtToken);
         int userId = claims.get("userId", Integer.class);
-        Response<List<NewsArticle>> getUserSavedArticlesResponse;
+        Response<List<NewsArticleData>> getUserSavedArticlesResponse;
         
         try {
-        	List<NewsArticle> savedArticles = savedArticlesService.getSavedArticlesByUser(userId);
+        	List<NewsArticleData> savedArticles = savedArticlesService.getSavedArticlesByUser(userId);
         	response.setStatus(HttpServletResponse.SC_OK);
         	String responseMessage = "Found " + savedArticles.size() + " articles";
         	getUserSavedArticlesResponse = new Response<>(true, responseMessage, Optional.of(savedArticles));
@@ -65,7 +66,7 @@ public class SaveArticle extends HttpServlet {
 
 	    try {
 	        ObjectMapper mapper = SingletonObjectMapper.getInstance();
-	        List<Integer> articleIds = mapper.readValue(request.getInputStream(), new TypeReference<List<Integer>>() {});
+	        Set<Integer> articleIds = mapper.readValue(request.getInputStream(), new TypeReference<Set<Integer>>() {});
 
 	        savedArticlesService.saveArticle(userId, articleIds);
 
@@ -93,11 +94,11 @@ public class SaveArticle extends HttpServlet {
 	    
 	    try {
 	    	ObjectMapper mapper = SingletonObjectMapper.getInstance();
-	        List<Integer> articleIds = mapper.readValue(request.getInputStream(), new TypeReference<List<Integer>>() {});
+	        Set<Integer> articleIds = getArticleIds(request);
 	        
 	        boolean isDeleted = savedArticlesService.deleteArticles(userId, articleIds);
 	        if(isDeleted) {
-	        	response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+	        	response.setStatus(HttpServletResponse.SC_OK);
 	        	deleteArticleResponse = new Response<>(true, "Articles removed from saved artices", Optional.empty());
 	        }
 	    } catch(RuntimeException runtimeException) {
@@ -110,5 +111,24 @@ public class SaveArticle extends HttpServlet {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             return response;
         }); 
+	}
+	
+	private Set<Integer> getArticleIds(HttpServletRequest request){
+		String[] articleIdParams = request.getParameterValues("articleId");
+		Set<Integer> articleIds = new HashSet<>();
+
+        if (articleIdParams == null || articleIdParams.length == 0) {
+            return articleIds;
+        }
+
+        for (String idString : articleIdParams) {
+            try {
+                articleIds.add(Integer.parseInt(idString));
+            } catch (NumberFormatException numberFormatException) {
+            	System.out.println(numberFormatException.getStackTrace());
+                return new HashSet<>();
+            }
+        }
+        return articleIds;
 	}
 }

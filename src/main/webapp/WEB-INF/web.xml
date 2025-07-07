@@ -1,15 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="https://jakarta.ee/xml/ns/jakartaee" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd" version="6.0">
-  <servlet>
-    <description></description>
-    <display-name>Hello</display-name>
-    <servlet-name>Hello</servlet-name>
-    <servlet-class>servlets.Hello</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>Hello</servlet-name>
-    <url-pattern>/Hello</url-pattern>
-  </servlet-mapping>
+
   <display-name>news-aggregator</display-name>
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
@@ -23,7 +14,7 @@
     <description></description>
     <display-name>Login</display-name>
     <servlet-name>Login</servlet-name>
-    <servlet-class>servlets.auth.Login</servlet-class>
+    <servlet-class>servlets.Login</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>Login</servlet-name>
@@ -33,7 +24,7 @@
     <description></description>
     <display-name>Signup</display-name>
     <servlet-name>Signup</servlet-name>
-    <servlet-class>servlets.auth.Signup</servlet-class>
+    <servlet-class>servlets.Signup</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>Signup</servlet-name>
@@ -46,7 +37,7 @@
     <description></description>
     <display-name>Search</display-name>
     <servlet-name>Search</servlet-name>
-    <servlet-class>servlets.search.Search</servlet-class>
+    <servlet-class>servlets.Search</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>Search</servlet-name>
@@ -71,5 +62,15 @@
   <servlet-mapping>
     <servlet-name>ArticlesMetadata</servlet-name>
     <url-pattern>/api/v1/articles/metadata</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>NotificationPreferences</display-name>
+    <servlet-name>NotificationPreferences</servlet-name>
+    <servlet-class>servlets.NotificationPreferences</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>NotificationPreferences</servlet-name>
+    <url-pattern>/api/v1/notification/preference/category</url-pattern>
   </servlet-mapping>
 </web-app>
