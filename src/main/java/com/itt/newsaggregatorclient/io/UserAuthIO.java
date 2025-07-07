@@ -13,10 +13,12 @@ import com.itt.newsaggregatorclient.validator.InputValidator;
 import java.util.Scanner;
 
 public class UserAuthIO {
-    Scanner inputScanner = SingletonScanner.scannerSupplier.get();
+    Scanner inputScanner = SingletonScanner.getScannerInstance();
+    MainMenu mainMenu = AppConfig.getMainMenuInstance();
 
     public void startApplication(){
         boolean isLoggedIn = false;
+        System.out.println("Welcome to the News Aggregator application.");
 
         while(!isLoggedIn){
             System.out.println(Prompts.USER_AUTH_PROMPT);
@@ -37,6 +39,7 @@ public class UserAuthIO {
                     System.exit(0);
                 } else{
                     System.out.println(Messages.LOGIN_SUCCESSFUL);
+                    mainMenu.displayMenu();
                 }
             } else if(inputCommand.equalsIgnoreCase(Constants.SIGNUP)){
                 initiateSignup();

@@ -2,20 +2,20 @@ package com.itt.newsaggregatorclient.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.itt.newsaggregatorclient.dto.APIResponse;
 import com.itt.newsaggregatorclient.util.SingletonObjectMapper;
 
 import java.net.URI;
 import java.net.http.HttpRequest;
 import java.util.Map;
 
-public interface PostRequestsHandler extends APIHandler{
-
-    default HttpRequest buildHttpRequest(Object data, URI uri,  Map<String, String> headers){
+public interface DeleteRequestsHandler extends APIHandler {
+    default HttpRequest buildHttpRequest(Object data, URI uri, Map<String, String> headers){
         String jsonRequestString = prepareRequestBody(data);
         HttpRequest.Builder httpBuilder = HttpRequest.newBuilder()
                 .uri(uri)
                 .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(jsonRequestString));
+                .DELETE();
         addHeaders(httpBuilder, headers);
         return httpBuilder.build();
     }

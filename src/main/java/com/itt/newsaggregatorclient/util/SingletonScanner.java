@@ -10,7 +10,7 @@ public class SingletonScanner {
 
     }
 
-    public static Supplier<Scanner> scannerSupplier = () -> {
+    public static Scanner getScannerInstance(){
         if(inputScanner == null){
             inputScanner = new Scanner(System.in);
         }

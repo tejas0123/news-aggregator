@@ -1,22 +1,22 @@
 package com.itt.newsaggregatorclient.api;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itt.newsaggregatorclient.dto.APIResponse;
 import com.itt.newsaggregatorclient.dto.Response;
 import com.itt.newsaggregatorclient.util.SingletonObjectMapper;
-
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.sql.ResultSet;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Optional;
 
 public interface APIHandler{
-    URI buildUri();
+    URI buildUri(String uriString);
 
     APIResponse sendAPIRequest(Object data);
 
@@ -24,24 +24,19 @@ public interface APIHandler{
         headers.forEach(httpBuilder::header);
     }
 
-    default APIResponse sendHttpRequest(HttpRequest httpRequest){
+    default <T> APIResponse sendHttpRequest(HttpRequest httpRequest, TypeReference<Response<T>> typeReference) {
         HttpClient client = HttpClient.newHttpClient();
 
         try {
             HttpResponse<String> httpResponse = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
             ObjectMapper mapper = SingletonObjectMapper.getInstance();
             String jsonString = httpResponse.body();
-            System.out.println(httpResponse);
-            Response<Void> response = mapper.readValue(
-                    jsonString,
-                    new TypeReference<Response<Void>>() {}
-            );
 
-            System.out.println(response);
+            Response<T> response = mapper.readValue(jsonString, typeReference);
 
             return new APIResponse(
                     httpResponse.statusCode(),
-                    httpResponse.body(),
+                    jsonString,
                     response.isOperationSuccessful(),
                     response.message()
             );
@@ -54,4 +49,20 @@ public interface APIHandler{
             );
         }
     }
+
+
+//    default Optional<String> sendRequest(HttpRequest httpRequest){
+//        HttpClient client = HttpClient.newHttpClient();
+//
+//        try {
+//            HttpResponse<String> httpResponse = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+//            ObjectMapper mapper = SingletonObjectMapper.getInstance();
+//            String jsonString = httpResponse.body();
+//            return Optional.of(jsonString);
+//
+//        } catch (IOException | InterruptedException exception) {
+//            System.out.println(exception.getStackTrace());
+//            return Optional.empty();
+//        }
+//    }
 }
