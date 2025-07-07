@@ -6,11 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import constants.Messages;
 import exception.DAOException;
 import model.NewsArticle;
@@ -63,7 +61,7 @@ public class NewsAPIDAO implements NewsProviderDAO{
 
 	@Override
 	public Map<String, Integer> getNewsCategories() {
-		String GET_NEWS_CATEGORIES_QUERY = "SELECT category_id, name, is_active FROM news_categories WHERE is_active = true LIMIT 6";
+		String GET_NEWS_CATEGORIES_QUERY = "SELECT category_id, name, is_active FROM news_categories WHERE is_active = true";
 		
 		try {
 			Connection connection = DBConnection.getConnection();
@@ -83,4 +81,5 @@ public class NewsAPIDAO implements NewsProviderDAO{
 		}
 	}
 
+	
 }

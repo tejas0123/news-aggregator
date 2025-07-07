@@ -23,7 +23,7 @@ public class ArticlesMetadata extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ObjectMapper mapper = SingletonObjectMapper.getInstance();
-		Response<List<ArticleMetadata>> getArticleMetadataResponse = null;;
+		Response<List<ArticleMetadata>> getArticleMetadataResponse = null;
 	
 		Set<Integer> articleIds = getArticleIds(request);
 		if(articleIds.isEmpty()) {

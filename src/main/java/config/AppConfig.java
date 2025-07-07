@@ -3,6 +3,8 @@ package config;
 import dao.ArticlesMetadataDAO;
 import dao.ArticlesMetadataDAOImpl;
 import dao.NewsAPIDAO;
+import dao.NewsCategoriesDAO;
+import dao.NewsCategoriesDAOImpl;
 import dao.NotificationPreferenceDAO;
 import dao.NotificationPreferenceDAOImpl;
 import dao.SavedArticleDAO;
@@ -15,6 +17,8 @@ import newsprovider.NewsAPIRequest;
 import newsprovider.NewsAPIRequestImpl;
 import service.ArticlesMetadataService;
 import service.ArticlesMetadataServiceImpl;
+import service.NewsCategoriesService;
+import service.NewsCategoriesServiceImpl;
 import service.NotificationPreferenceService;
 import service.NotificationPreferenceServiceImpl;
 import service.SavedArticlesService;
@@ -37,6 +41,8 @@ public class AppConfig {
     private static ArticlesMetadataDAO articlesMetadataDAO = null;
     private static NotificationPreferenceDAO notificationPreferenceDAO = null;
     private static NotificationPreferenceService notificationPreferenceService = null;
+    private static NewsCategoriesService newsCategoriesService = null;
+    private static NewsCategoriesDAO newsCategoriesDAO = null;
     
     private AppConfig() {
     	
@@ -110,5 +116,25 @@ public class AppConfig {
     		notificationPreferenceService = new NotificationPreferenceServiceImpl(notificationPreferenceDAO);
     	}
     	return notificationPreferenceService;
+    }
+    
+    public static NewsCategoriesService getNewsCategoriesServiceInstance() {
+    	if(newsAPIDAO == null) {
+    		newsAPIDAO = new NewsAPIDAO();
+    	}
+    	if(newsCategoriesService == null) {
+    		newsCategoriesService = new NewsCategoriesServiceImpl(newsAPIDAO);
+    	}
+    	return newsCategoriesService;
+    }
+    
+    public static NewsCategoriesService getNewsCategoriesServiceWithDAOInstance() {
+    	if(newsCategoriesDAO == null) {
+    		newsCategoriesDAO = new NewsCategoriesDAOImpl();
+    	}
+    	if(newsCategoriesService == null) {
+    		newsCategoriesService = new NewsCategoriesServiceImpl(newsCategoriesDAO);
+    	}
+    	return newsCategoriesService;
     }
 }
