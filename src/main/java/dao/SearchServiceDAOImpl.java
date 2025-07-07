@@ -66,7 +66,7 @@ public class SearchServiceDAOImpl implements SearchServiceDAO {
 
     private String buildSearchQuery(StringBuilder searchQuery, SearchParams searchParams, List<Object> parameters) {
         searchParams.category().ifPresent(category -> {
-            searchQuery.append(" AND category_id = (SELECT category_id FROM news_categories WHERE LOWER(name) = LOWER(?))");
+            searchQuery.append(" AND category_id = (SELECT category_id FROM news_categories WHERE LOWER(name) = LOWER(?) AND is_active = true)");
             parameters.add(category);
         });
 

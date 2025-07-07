@@ -80,6 +80,6 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>NewsCategories</servlet-name>
-    <url-pattern>/api/v1/categories</url-pattern>
+    <url-pattern>/api/v1/admin/categories</url-pattern>
   </servlet-mapping>
 </web-app>

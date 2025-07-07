@@ -2,6 +2,8 @@ package service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
 import dao.NewsAPIDAO;
 import dao.NewsCategoriesDAO;
 
@@ -25,6 +27,11 @@ public class NewsCategoriesServiceImpl implements NewsCategoriesService{
 	@Override
 	public void addCategory(Map<String, List<String>> categoryWithKeywordsMap) {
 		newsCategoriesDAO.addCategory(categoryWithKeywordsMap);
+	}
+
+	@Override
+	public boolean disableCategory(Set<Integer> categoryIds) {
+		return newsCategoriesDAO.disableNewsCategory(categoryIds);
 	}
 	
 }
