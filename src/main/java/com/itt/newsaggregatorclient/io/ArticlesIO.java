@@ -4,6 +4,7 @@ import com.itt.newsaggregatorclient.AppConfig;
 import com.itt.newsaggregatorclient.api.articles.ArticlesMetadataUpdateHandler;
 import com.itt.newsaggregatorclient.api.articles.GetHeadlinesHandler;
 import com.itt.newsaggregatorclient.api.articles.GetSavedArticlesHandler;
+import com.itt.newsaggregatorclient.api.articles.PostUserSavedArticlesHandler;
 import com.itt.newsaggregatorclient.dto.APIResponse;
 import com.itt.newsaggregatorclient.dto.ArticleFilterParams;
 import com.itt.newsaggregatorclient.dto.ArticleMetadata;
@@ -17,16 +18,17 @@ public class ArticlesIO {
     Scanner inputScanner = SingletonScanner.getScannerInstance();
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     ArticleUserInteractionIO userInteractionIO = new ArticleUserInteractionIO();
-    GetSavedArticlesHandler getSavedArticlesHandler = AppConfig.getSaveArticlesHandlerInstance();
+    PostUserSavedArticlesHandler postUserSavedArticlesHandler = AppConfig.getUserSavedArticlesHandler();
     ArticlesMetadataUpdateHandler articlesMetadataUpdateHandler = AppConfig.getMetadataUpdateHandlerInstance();
+    GetSavedArticlesHandler getSavedArticlesHandler = AppConfig.getSavedArticlesHandlerInstance();
 
-    public void searchArticles(String flag) {
+    public void searchArticles(String searchEntity) {
         LocalDate fromDate = null;
         LocalDate toDate = null;
         String category = "";
         Optional<String> keyword = Optional.empty();
 
-        if (flag.equalsIgnoreCase("headlines")) {
+        if (searchEntity.equalsIgnoreCase("headlines")) {
             System.out.println("Please choose from the options below");
             System.out.println("1. Today");
             System.out.println("2. Date Range");
@@ -66,7 +68,7 @@ public class ArticlesIO {
                 case 5 -> "technology";
                 default -> "business,entertainment,sports,technology";
             };
-        } else if (flag.equalsIgnoreCase("keywordSearch")) {
+        } else if (searchEntity.equalsIgnoreCase("keywordSearch")) {
             fromDate = readDate("Enter start date in (yyyy-MM-dd) format: ");
             toDate = readDate("Enter end date in (yyyy-MM-dd) format: ");
 
@@ -83,7 +85,7 @@ public class ArticlesIO {
         ArticleFilterParams params = new ArticleFilterParams(
                 Optional.ofNullable(fromDate),
                 Optional.ofNullable(toDate),
-                flag.equalsIgnoreCase("headlines") ? Optional.of(category) : Optional.empty(),
+                searchEntity.equalsIgnoreCase("headlines") ? Optional.of(category) : Optional.empty(),
                 keyword
         );
 
@@ -110,6 +112,23 @@ public class ArticlesIO {
         }
     }
 
+    public void getUserSavedArticles(){
+        APIResponse apiResponse = getSavedArticlesHandler.sendAPIRequest("");
+        if(apiResponse.success()){
+
+            Optional<List<NewsArticleData>> savedArticlesOptional = getSavedArticlesHandler.extractResponseData(apiResponse.body());
+
+            if(savedArticlesOptional.isPresent()){
+                List<NewsArticleData> savedArticles = savedArticlesOptional.get();
+                System.out.println();
+                System.out.println("Fetched saved articles");
+                System.out.println("___________________________________________________");
+            } else{
+                System.out.println("No saved articles to show");
+                System.out.println(apiResponse.message());
+            }
+        }
+    }
 
     private int getValidChoice(int min, int max) {
         while (true) {
@@ -141,7 +160,7 @@ public class ArticlesIO {
     private void updateArticlesData(){
         Set<Integer> userSavedArticleIds = userInteractionIO.getUserSavedArticleIds();
         if(!userSavedArticleIds.isEmpty()){
-            APIResponse saveArticlesResponse = getSavedArticlesHandler.sendAPIRequest(userSavedArticleIds);
+            APIResponse saveArticlesResponse = postUserSavedArticlesHandler.sendAPIRequest(userSavedArticleIds);
             System.out.println(saveArticlesResponse);
         }
 

@@ -1,6 +1,8 @@
 package com.itt.newsaggregatorclient.io;
 
 import com.itt.newsaggregatorclient.AppConfig;
+import com.itt.newsaggregatorclient.api.articles.GetSavedArticlesHandler;
+import com.itt.newsaggregatorclient.dto.APIResponse;
 import com.itt.newsaggregatorclient.util.JwtUtil;
 import com.itt.newsaggregatorclient.util.SingletonScanner;
 import io.jsonwebtoken.Claims;
@@ -66,7 +68,7 @@ public class MainMenu {
                 articlesIO.searchArticles("keywordSearch");
                 break;
             case 4:
-                //showNotifications(userDetails);
+                articlesIO.getUserSavedArticles();
                 break;
             case 5:
                 return true;

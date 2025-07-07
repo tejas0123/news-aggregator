@@ -74,7 +74,6 @@ public class GetHeadlinesHandler implements GetRequestsHandler<List<NewsArticleD
         }
     }
 
-
     @Override
     public Optional<List<NewsArticleData>> extractResponseData(String body) {
         ObjectMapper mapper = SingletonObjectMapper.getInstance();

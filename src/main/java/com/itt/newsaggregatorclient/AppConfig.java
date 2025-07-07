@@ -3,6 +3,7 @@ package com.itt.newsaggregatorclient;
 import com.itt.newsaggregatorclient.api.PostRequestsHandler;
 import com.itt.newsaggregatorclient.api.articles.ArticlesMetadataUpdateHandler;
 import com.itt.newsaggregatorclient.api.articles.GetSavedArticlesHandler;
+import com.itt.newsaggregatorclient.api.articles.PostUserSavedArticlesHandler;
 import com.itt.newsaggregatorclient.api.auth.LoginHandler;
 import com.itt.newsaggregatorclient.api.auth.SignupHandler;
 import com.itt.newsaggregatorclient.io.ArticlesIO;
@@ -12,9 +13,10 @@ public class AppConfig {
     private static PostRequestsHandler loginHandler = null;
     private static MainMenu mainMenu = null;
     private static ArticlesIO articlesIO = null;
-    private static GetSavedArticlesHandler getSavedArticlesHandler = null;
+    private static PostUserSavedArticlesHandler postUserSavedArticlesHandler = null;
     private static ArticlesMetadataUpdateHandler articlesMetadataUpdateHandler = null;
     private static SignupHandler signupHandler = null;
+    private static GetSavedArticlesHandler savedArticlesHandler = null;
 
     public static PostRequestsHandler getLoginHandlerInstance(){
         if(loginHandler == null){
@@ -44,11 +46,11 @@ public class AppConfig {
         return articlesIO;
     }
 
-    public static GetSavedArticlesHandler getSaveArticlesHandlerInstance(){
-        if(getSavedArticlesHandler == null){
-            getSavedArticlesHandler = new GetSavedArticlesHandler();
+    public static PostUserSavedArticlesHandler getUserSavedArticlesHandler(){
+        if(postUserSavedArticlesHandler == null){
+            postUserSavedArticlesHandler = new PostUserSavedArticlesHandler();
         }
-        return getSavedArticlesHandler;
+        return postUserSavedArticlesHandler;
     }
 
     public static ArticlesMetadataUpdateHandler getMetadataUpdateHandlerInstance(){
@@ -56,5 +58,12 @@ public class AppConfig {
             articlesMetadataUpdateHandler = new ArticlesMetadataUpdateHandler();
         }
         return articlesMetadataUpdateHandler;
+    }
+
+    public static GetSavedArticlesHandler getSavedArticlesHandlerInstance(){
+        if(savedArticlesHandler == null){
+            savedArticlesHandler = new GetSavedArticlesHandler();
+        }
+        return savedArticlesHandler;
     }
 }
