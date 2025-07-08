@@ -1,27 +1,21 @@
 package servlets;
 
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import model.ArticleMetadata;
 import service.NotificationPreferenceService;
 import util.HttpServletResponseHelper;
 import util.JwtUtil;
 import util.SingletonObjectMapper;
-
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import config.AppConfig;
-import dto.CategoryPreference;
 import dto.Response;
 import io.jsonwebtoken.Claims;
 
@@ -29,7 +23,6 @@ public class NotificationPreferences extends HttpServlet {
 	private NotificationPreferenceService notificationPreferenceService = AppConfig.getNotificationPreferenceServiceInstance();
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
 		ObjectMapper mapper = SingletonObjectMapper.getInstance();
         Response<List<Integer>> getUserByCategoryResponse;
 
@@ -52,7 +45,6 @@ public class NotificationPreferences extends HttpServlet {
         buildResponse(response, getUserByCategoryResponse);
 	}
 
-
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ObjectMapper mapper = SingletonObjectMapper.getInstance();
         Response<Void> notificationPreferenceResponse;
@@ -74,7 +66,6 @@ public class NotificationPreferences extends HttpServlet {
         
         buildResponse(response, notificationPreferenceResponse);
 	}
-
 
 	protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ObjectMapper mapper = SingletonObjectMapper.getInstance();
@@ -101,6 +92,8 @@ public class NotificationPreferences extends HttpServlet {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             deletePreferencesResponse = new Response<>(false, "Failed to delete category preference", Optional.empty());
         }
+        
+        buildResponse(response, deletePreferencesResponse);
 	}
 	
 	private Set<String> getCategoryIds(HttpServletRequest request){

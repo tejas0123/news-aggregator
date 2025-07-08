@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -88,6 +89,32 @@ public class NotificationPreferenceDAOImpl implements NotificationPreferenceDAO{
 	    } catch (SQLException sqlException) {
 	        throw new DAOException(sqlException.getMessage(), sqlException.getCause());
 	    }
+	}
+
+	@Override
+	public Set<String> getUserPreferences(int userId) {
+		String getUserPreferencesQuery = """
+				SELECT nc.category_id, nc.name
+				FROM category_preferences cp
+				JOIN news_categories nc ON cp.category_id = nc.category_id
+				WHERE cp.user_id = ?;""";
+		
+		try {
+			Connection connection = DBConnection.getConnection();
+			PreparedStatement preparedStatement = connection.prepareStatement(getUserPreferencesQuery);
+			preparedStatement.setInt(1, userId);
+			ResultSet resultSet = preparedStatement.executeQuery();
+			
+			Set<String> userPreferences = new HashSet<>();
+			
+			while(resultSet.next()) {
+				userPreferences.add(resultSet.getString("name"));
+			}
+			
+			return userPreferences;
+		} catch(SQLException sqlException) {
+			throw new DAOException(sqlException.getMessage());
+		}
 	}
 	
 }

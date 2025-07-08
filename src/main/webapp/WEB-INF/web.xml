@@ -96,4 +96,24 @@
     <servlet-name>ServerOperations</servlet-name>
     <url-pattern>/api/v1/admin/server</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>UserPreferences</display-name>
+    <servlet-name>UserPreferences</servlet-name>
+    <servlet-class>servlets.UserPreferences</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>UserPreferences</servlet-name>
+    <url-pattern>/api/v1/notification/preference</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>Notifications</display-name>
+    <servlet-name>Notifications</servlet-name>
+    <servlet-class>servlets.Notifications</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Notifications</servlet-name>
+    <url-pattern>/api/v1/notification</url-pattern>
+  </servlet-mapping>
 </web-app>

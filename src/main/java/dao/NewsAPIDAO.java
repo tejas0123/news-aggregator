@@ -6,10 +6,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import constants.Messages;
+import dto.NewsArticleData;
 import exception.DAOException;
 import model.NewsArticle;
 import util.DBConnection;
@@ -80,6 +82,50 @@ public class NewsAPIDAO implements NewsProviderDAO{
 			throw new DAOException(sqlException.getMessage(), sqlException.getCause());
 		}
 	}
-
 	
+	public List<NewsArticle> getLatestAddedArticles() {
+	    String LATEST_ADDED_ARTICLES = """
+	        SELECT 
+			    a.article_id,
+			    a.title,
+			    a.url,
+			    a.description,
+			    a.article_body,
+			    a.published_at,
+			    a.source_id,
+			    nc.name AS category
+			FROM articles a
+			JOIN news_categories nc ON a.category_id = nc.category_id
+			WHERE a.fetched_at >= NOW() - INTERVAL '1 hour';
+	    """;
+
+	    List<NewsArticle> articles = new ArrayList<>();
+
+	    try {
+	        Connection connection = DBConnection.getConnection();
+	        PreparedStatement preparedStatement = connection.prepareStatement(LATEST_ADDED_ARTICLES);
+	        ResultSet resultSet = preparedStatement.executeQuery();
+	     
+	        while (resultSet.next()) {
+	            NewsArticle article = new NewsArticle();
+	            article.setArticleId(resultSet.getInt("article_id"));
+	            article.setTitle(resultSet.getString("title"));
+	            article.setUrl(resultSet.getString("url"));
+	            article.setDescription(resultSet.getString("description"));
+	            article.setArticle_body(resultSet.getString("article_body"));
+	            article.setPublishedAt(resultSet.getTimestamp("published_at").toInstant());
+	            article.setSourceId(resultSet.getString("source_id"));
+	            article.setCategory(resultSet.getString("category"));
+	            articles.add(article);
+	        }
+	        
+	    } catch (SQLException sqlException) {
+	        System.out.println(sqlException.getStackTrace());
+	        throw new DAOException(sqlException.getMessage(), sqlException.getCause());
+	    }
+
+	    return articles;
+	}
+
+		
 }

@@ -87,7 +87,7 @@ public class NewsAPIRequestImpl implements NewsAPIRequest{
 			}
 		}
 		
-		//newsAPIDAO.insertNewsArticles(newsHeadLines, headlinesCategories);
+		newsAPIDAO.insertNewsArticles(newsHeadLines, headlinesCategories);
 		System.out.println("Printing news headlines: " + newsHeadLines.size());
 		System.out.println("Printing news headlines: " + newsHeadLines);
 	}

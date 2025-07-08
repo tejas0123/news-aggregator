@@ -7,4 +7,5 @@ public interface NotificationPreferenceService {
     void saveCategoryPreferences(int userId, List<String> preferences);
     List<Integer> getUserIdsByCategory(String categoryName);
     void removeCategoryPreference(int userId, Set<String> categories);
+    Set<String> getUserPreferences(int userId);
 }

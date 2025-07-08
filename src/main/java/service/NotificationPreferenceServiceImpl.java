@@ -27,4 +27,9 @@ public class NotificationPreferenceServiceImpl implements NotificationPreference
 	public void removeCategoryPreference(int userId, Set<String> categories) {
 		notificationPreferenceDAO.deleteCategoryPreference(userId, categories);
 	}
+
+	@Override
+	public Set<String> getUserPreferences(int userId) {
+		return notificationPreferenceDAO.getUserPreferences(userId);
+	}
 }

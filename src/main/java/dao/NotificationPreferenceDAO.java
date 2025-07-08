@@ -8,4 +8,5 @@ public interface NotificationPreferenceDAO {
 	void insertCategoryPreferences(int userId, List<String> preferences);
 	List<Integer> getUserIdsByCategoryName(String categoryName);
 	void deleteCategoryPreference(int userId, Set<String> categories);
+	Set<String> getUserPreferences(int userId);
 }
