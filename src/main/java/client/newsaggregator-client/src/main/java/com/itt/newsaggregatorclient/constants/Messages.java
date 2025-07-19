@@ -1,0 +1,13 @@
+package com.itt.newsaggregatorclient.constants;
+
+public class Messages {
+    public static final String LOGIN_SUCCESSFUL = "Login Successful!";
+    public static final String INCORRECT_CREDENTIALS = "Incorrect email or Password";
+    public static final String NO_MORE_ATTEMPTS = "Three incorrect attempts at login. Please try later";
+    public static final String INVALID_EMAIL = "Invalid email. Enter a valid email";
+    public static final String USER_NOT_FOUND = "User not found";
+    public static final String INVALID_INPUT = "Invalid input. Please enter a valid input";
+    public static final String INVALID_GENDER = "Invalid gender entered. Please try again.";
+    public static final String SIGNUP_SUCCESS = "Signup successful. You can now log in.";
+    public static final String SIGNUP_FAILED = "Signup failed. Please try again.";
+}
