@@ -1,4 +1,4 @@
-package servlets.search;
+package servlets;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;

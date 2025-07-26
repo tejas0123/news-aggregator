@@ -20,7 +20,7 @@ public interface NewsAPIRequest {
 	List<NewsArticle> processAPIResponse(String jsonResponseData, String newsHeadlinesCategory);
 	
 	default void addHeaders(HttpRequest.Builder httpBuilder, Map<String, String> headers) {
-	        headers.forEach(httpBuilder::header);
+		headers.forEach(httpBuilder::header);
 	}
 	
 	default Optional<String> sendNewsArticlesRequest(HttpRequest request){

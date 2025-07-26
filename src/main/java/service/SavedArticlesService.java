@@ -1,12 +1,12 @@
 package service;
 
 import java.util.List;
-
-import model.NewsArticle;
+import java.util.Set;
+import dto.NewsArticleData;
 
 public interface SavedArticlesService {
-	List<NewsArticle> getSavedArticlesByUser(int userId);
+	List<NewsArticleData> getSavedArticlesByUser(int userId);
     void saveArticle(int userId, int articleId);
-    void saveArticle(int userId, List<Integer> articleIds);
-    boolean deleteArticles(int userId, List<Integer> articleIds);
+    void saveArticle(int userId, Set<Integer> articleIds);
+    boolean deleteArticles(int userId, Set<Integer> articleIds);
 }

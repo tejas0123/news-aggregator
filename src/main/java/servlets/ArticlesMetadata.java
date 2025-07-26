@@ -23,9 +23,9 @@ public class ArticlesMetadata extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ObjectMapper mapper = SingletonObjectMapper.getInstance();
-		Response<List<ArticleMetadata>> getArticleMetadataResponse = null;;
+		Response<List<ArticleMetadata>> getArticleMetadataResponse = null;
 	
-		Set<Integer> articleIds = getArticleIds(request, response, getArticleMetadataResponse);
+		Set<Integer> articleIds = getArticleIds(request);
 		if(articleIds.isEmpty()) {
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             getArticleMetadataResponse = new Response<>(false, "Invalid request", Optional.empty());
@@ -75,7 +75,7 @@ public class ArticlesMetadata extends HttpServlet {
         });
 	}
 	
-	private Set<Integer> getArticleIds(HttpServletRequest request, HttpServletResponse response, Response<List<ArticleMetadata>> getArticleMetadataResponse){
+	private Set<Integer> getArticleIds(HttpServletRequest request){
 		String[] articleIdParams = request.getParameterValues("articleId");
 		Set<Integer> articleIds = new HashSet<>();
 
@@ -87,6 +87,7 @@ public class ArticlesMetadata extends HttpServlet {
             try {
                 articleIds.add(Integer.parseInt(idString));
             } catch (NumberFormatException numberFormatException) {
+            	System.out.println(numberFormatException.getStackTrace());
                 return new HashSet<>();
             }
         }

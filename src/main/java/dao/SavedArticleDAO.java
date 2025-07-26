@@ -1,12 +1,12 @@
 package dao;
 
 import java.util.List;
-
-import model.NewsArticle;
+import java.util.Set;
+import dto.NewsArticleData;
 
 public interface SavedArticleDAO {
-	List<NewsArticle> getSavedArticlesByUser(int userId);
+	List<NewsArticleData> getSavedArticlesByUser(int userId);
     void saveArticle(int userId, int articleId);
-    boolean deleteArticles(int userId, List<Integer> articleIds);
-    void saveArticle(int userId, List<Integer> articleIds);
+    boolean deleteArticles(int userId, Set<Integer> articleIds);
+    void saveArticle(int userId, Set<Integer> articleIds);
 }

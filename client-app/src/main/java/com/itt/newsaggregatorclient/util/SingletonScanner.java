@@ -1,0 +1,18 @@
+package com.itt.newsaggregatorclient.util;
+
+import java.util.Scanner;
+
+public class SingletonScanner {
+    private static Scanner inputScanner = null;
+
+    private SingletonScanner() {
+
+    }
+
+    public static Scanner getScannerInstance(){
+        if(inputScanner == null){
+            inputScanner = new Scanner(System.in);
+        }
+        return inputScanner;
+    };
+}

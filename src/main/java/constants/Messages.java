@@ -13,4 +13,5 @@ public class Messages {
 	public static final String USERNAME_EXISTS = "User with the given email already exists!";
 	public static final String LAST_FETCHED_NOT_FOUND = "Last fetched not found";
 	public static final String ERROR_FETCHING_NEWS_CATEGORIES = "News categories not fetched";
+	public static final String UNAUTHORIZED_OPERATION = "You are not authorized to view this source / do this operation";
 }

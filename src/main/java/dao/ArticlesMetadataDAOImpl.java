@@ -16,13 +16,13 @@ public class ArticlesMetadataDAOImpl implements ArticlesMetadataDAO {
 
     @Override
     public void updateArticlesMetadata(List<ArticleMetadata> metadataList) {
-    	String updateMetadataQuery = """
-	        INSERT INTO article_metadata (article_id, likes, dislikes, reports)
-	        VALUES (?, ?, ?, ?)
-	        ON CONFLICT (article_id) DO UPDATE
-	        SET likes = article_metadata.likes + EXCLUDED.likes,
-	            dislikes = article_metadata.dislikes + EXCLUDED.dislikes,
-	            reports = article_metadata.reports + EXCLUDED.reports
+    	final String updateMetadataQuery = """
+		        INSERT INTO article_metadata (article_id, likes, dislikes, reports)
+		        VALUES (?, ?, ?, ?)
+		        ON CONFLICT (article_id) DO UPDATE
+		        SET likes = article_metadata.likes + EXCLUDED.likes,
+		            dislikes = article_metadata.dislikes + EXCLUDED.dislikes,
+		            reports = article_metadata.reports + EXCLUDED.reports
 	        """;
 
         try {
@@ -38,6 +38,7 @@ public class ArticlesMetadataDAOImpl implements ArticlesMetadataDAO {
 
             preparedStatement.executeBatch();
         } catch (SQLException sqlException) {
+        	sqlException.printStackTrace();
             throw new DAOException(sqlException.getMessage(), sqlException.getCause());
         }
     }
@@ -70,6 +71,7 @@ public class ArticlesMetadataDAOImpl implements ArticlesMetadataDAO {
 
             return articlesMetadata;
         } catch (SQLException sqlException) {
+        	sqlException.printStackTrace();
             throw new DAOException(sqlException.getMessage(), sqlException.getCause());
         }
     }

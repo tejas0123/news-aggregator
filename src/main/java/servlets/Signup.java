@@ -1,4 +1,4 @@
-package servlets.auth;
+package servlets;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -34,18 +34,18 @@ public class Signup extends HttpServlet {
 		
 		try {
 			loginResponse = userAuthService.signup(userDetails);
-			response.setStatus(201);
+			response.setStatus(HttpServletResponse.SC_CREATED);
 		} catch(DuplicateUserException exception) {
 			loginResponse = new Response<>(false, Messages.USERNAME_EXISTS, Optional.empty());
-			response.setStatus(401);
+			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 		} catch(RuntimeException exception) {
-			response.setStatus(403);
+			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 			loginResponse = new Response<>(false, exception.getMessage(), Optional.empty());
 		}
 		
 		return HttpServletResponseHelper.buildHttpServletResponse(response, loginResponse)
 		        .orElseGet(() -> {
-		            response.setStatus(500);
+		            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		            return response;
 		        });
 	}

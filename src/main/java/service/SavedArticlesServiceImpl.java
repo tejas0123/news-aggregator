@@ -1,10 +1,10 @@
 package service;
 
 import java.util.List;
-
+import java.util.Set;
 import dao.SavedArticleDAO;
-import exception.DAOException;
-import model.NewsArticle;
+import dto.NewsArticleData;
+
 
 public class SavedArticlesServiceImpl implements SavedArticlesService{
 
@@ -15,7 +15,7 @@ public class SavedArticlesServiceImpl implements SavedArticlesService{
 	}
 
 	@Override
-	public List<NewsArticle> getSavedArticlesByUser(int userId) {
+	public List<NewsArticleData> getSavedArticlesByUser(int userId) {
 		return savedArticlesDAO.getSavedArticlesByUser(userId);
 	}
 
@@ -25,12 +25,12 @@ public class SavedArticlesServiceImpl implements SavedArticlesService{
 	}
 	
 	@Override
-	public boolean deleteArticles(int userId, List<Integer> articleIds) {
+	public boolean deleteArticles(int userId, Set<Integer> articleIds) {
 		return savedArticlesDAO.deleteArticles(userId, articleIds);
 	}
 
 	@Override
-	public void saveArticle(int userId, List<Integer> articleIds) {
+	public void saveArticle(int userId, Set<Integer> articleIds) {
 		savedArticlesDAO.saveArticle(userId, articleIds);
 	}
 

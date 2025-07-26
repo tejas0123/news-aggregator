@@ -3,20 +3,36 @@ package config;
 import dao.ArticlesMetadataDAO;
 import dao.ArticlesMetadataDAOImpl;
 import dao.NewsAPIDAO;
+import dao.NewsCategoriesDAO;
+import dao.NewsCategoriesDAOImpl;
+import dao.NotificationPreferenceDAO;
+import dao.NotificationPreferenceDAOImpl;
+import dao.NotificationsDAO;
+import dao.NotificationsDAOImpl;
 import dao.SavedArticleDAO;
 import dao.SavedArticleDAOImpl;
 import dao.SearchServiceDAO;
 import dao.SearchServiceDAOImpl;
+import dao.ServerDAO;
+import dao.ServerDAOImpl;
 import dao.UserAuthenticationDAO;
 import dao.UserAuthenticationDAOImpl;
 import newsprovider.NewsAPIRequest;
 import newsprovider.NewsAPIRequestImpl;
 import service.ArticlesMetadataService;
 import service.ArticlesMetadataServiceImpl;
+import service.NewsCategoriesService;
+import service.NewsCategoriesServiceImpl;
+import service.NotificationPreferenceService;
+import service.NotificationPreferenceServiceImpl;
+import service.NotificationsService;
+import service.NotificationsServiceImpl;
 import service.SavedArticlesService;
 import service.SavedArticlesServiceImpl;
 import service.SearchService;
 import service.SearchServiceImpl;
+import service.ServerService;
+import service.ServerServiceImpl;
 import service.UserAuthenticationService;
 import service.UserAuthenticationServiceImpl;
 
@@ -31,6 +47,14 @@ public class AppConfig {
     private static SavedArticleDAO savedArticleDAO = null;
     private static ArticlesMetadataService articlesMetadataService = null;
     private static ArticlesMetadataDAO articlesMetadataDAO = null;
+    private static NotificationPreferenceDAO notificationPreferenceDAO = null;
+    private static NotificationPreferenceService notificationPreferenceService = null;
+    private static NewsCategoriesService newsCategoriesService = null;
+    private static NewsCategoriesDAO newsCategoriesDAO = null;
+    private static ServerDAO serverDAO = null;
+    private static ServerService serverService = null;
+    private static NotificationsService notificationsService = null;
+    private static NotificationsDAO notificationsDAO = null;
     
     private AppConfig() {
     	
@@ -94,4 +118,55 @@ public class AppConfig {
     	}
     	return articlesMetadataService;
     }
+    
+    public static NotificationPreferenceService getNotificationPreferenceServiceInstance() {
+    	if(notificationPreferenceDAO == null) {
+    		notificationPreferenceDAO = new NotificationPreferenceDAOImpl();
+    	}
+    	
+    	if(notificationPreferenceService == null) {
+    		notificationPreferenceService = new NotificationPreferenceServiceImpl(notificationPreferenceDAO);
+    	}
+    	return notificationPreferenceService;
+    }
+    
+    public static NewsCategoriesService getNewsCategoriesServiceInstance() {
+    	if(newsAPIDAO == null) {
+    		newsAPIDAO = new NewsAPIDAO();
+    	}
+    	if(newsCategoriesService == null) {
+    		newsCategoriesService = new NewsCategoriesServiceImpl(newsAPIDAO);
+    	}
+    	return newsCategoriesService;
+    }
+    
+    public static NewsCategoriesService getNewsCategoriesServiceWithDAOInstance() {
+    	if(newsCategoriesDAO == null) {
+    		newsCategoriesDAO = new NewsCategoriesDAOImpl();
+    	}
+    	if(newsCategoriesService == null) {
+    		newsCategoriesService = new NewsCategoriesServiceImpl(newsCategoriesDAO);
+    	}
+    	return newsCategoriesService;
+    }
+    
+    public static ServerService getServerServiceInstance() {
+    	if(serverDAO == null) {
+    		serverDAO = new ServerDAOImpl();
+    	}
+    	if(serverService == null) {
+    		serverService = new ServerServiceImpl(serverDAO);
+    	}
+    	return serverService;
+    }
+
+	public static NotificationsService getNotificationsServiceInstance() {
+		if(notificationsDAO == null) {
+			notificationsDAO = new NotificationsDAOImpl();
+		}
+		if(notificationsService == null) {
+			notificationsService = new NotificationsServiceImpl(notificationsDAO);
+		}
+		return notificationsService;
+	}
 }

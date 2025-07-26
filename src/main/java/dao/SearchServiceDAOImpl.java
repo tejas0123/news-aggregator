@@ -33,9 +33,10 @@ public class SearchServiceDAOImpl implements SearchServiceDAO {
         String searchQuery = buildSearchQuery(getArticlesQuery, searchParams, parameters);
         List<NewsArticleData> newsArticles = new ArrayList<>();
 
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement preparedStatement = conn.prepareStatement(searchQuery)) {
-
+        try {
+        	Connection conn = DBConnection.getConnection();
+            PreparedStatement preparedStatement = conn.prepareStatement(searchQuery);
+            
             for (int index = 0; index < parameters.size(); index++) {
             	Object param = parameters.get(index);
             	if (param instanceof java.time.Instant) {
@@ -66,7 +67,7 @@ public class SearchServiceDAOImpl implements SearchServiceDAO {
 
     private String buildSearchQuery(StringBuilder searchQuery, SearchParams searchParams, List<Object> parameters) {
         searchParams.category().ifPresent(category -> {
-            searchQuery.append(" AND category_id = (SELECT category_id FROM news_categories WHERE LOWER(name) = LOWER(?))");
+            searchQuery.append(" AND category_id = (SELECT category_id FROM news_categories WHERE LOWER(name) = LOWER(?) AND is_active = true)");
             parameters.add(category);
         });
 
@@ -88,7 +89,6 @@ public class SearchServiceDAOImpl implements SearchServiceDAO {
             parameters.add(to.plusDays(1).atStartOfDay(ZoneOffset.UTC).toInstant());
         });
 
-        System.out.println(searchQuery.toString());
         return searchQuery.toString();
     }
 }

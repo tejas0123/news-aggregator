@@ -1,4 +1,4 @@
-package servlets.auth;
+package servlets;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -7,7 +7,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import service.UserAuthenticationService;
 import util.HttpServletResponseHelper;
 import util.JwtUtil;
-
 import java.io.IOException;
 import java.util.Optional;
 import config.AppConfig;
@@ -34,13 +33,13 @@ public class Login extends HttpServlet {
 		
         try {
 			loginResponse = userAuthService.login(userCredentials, response);
-			response.setStatus(200);
+			response.setStatus(HttpServletResponse.SC_OK);
 		} catch(UserNotFoundException userNotFoundException) {
 			loginResponse = new Response<>(false, Messages.INCORRECT_CREDENTIALS, Optional.empty());
-			response.setStatus(401);
+			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 		} catch(RuntimeException runtimeException) {
 			loginResponse = new Response<>(false, runtimeException.getMessage(), Optional.empty());
-			response.setStatus(500);
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		
 		HttpServletResponseHelper.buildHttpServletResponse(response, loginResponse)
