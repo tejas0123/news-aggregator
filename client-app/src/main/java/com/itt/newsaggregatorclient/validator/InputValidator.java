@@ -1,7 +1,8 @@
 package com.itt.newsaggregatorclient.validator;
 
-import java.util.regex.Pattern;
 import com.itt.newsaggregatorclient.constants.Constants;
+
+import java.util.regex.Pattern;
 
 public class InputValidator {
     public static boolean isEmailValid(String email) {

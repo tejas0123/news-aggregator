@@ -14,7 +14,7 @@ public class NotificationsDAOImpl implements NotificationsDAO {
 	public List<NotificationDTO> getUserNotifcations(int userId) {
 	    List<NotificationDTO> notifications = new ArrayList<>();
 
-	    String query = """
+	    final String query = """
 	        SELECT n.notification_id, n.article_id, a.title, a.url, n.is_read
 	        FROM notifications n
 	        JOIN articles a ON n.article_id = a.article_id
@@ -22,9 +22,10 @@ public class NotificationsDAOImpl implements NotificationsDAO {
 	        ORDER BY n.notification_id DESC
 	    """;
 
-	    try (Connection connection = DBConnection.getConnection();
-	         PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-
+	    try {
+	    	Connection connection = DBConnection.getConnection();
+	        PreparedStatement preparedStatement = connection.prepareStatement(query);
+	        
 	        preparedStatement.setInt(1, userId);
 	        ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -40,7 +41,7 @@ public class NotificationsDAOImpl implements NotificationsDAO {
 
 	    } catch (SQLException sqlException) {
 	        sqlException.printStackTrace();
-	        throw new DAOException("Failed to fetch notifications", sqlException);
+	        throw new DAOException(sqlException.getMessage(), sqlException.getCause());
 	    }
 
 	    return notifications;

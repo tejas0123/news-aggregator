@@ -63,7 +63,6 @@ public class NotificationsIO {
             System.out.println("_____________________________________________________________________________________");
             System.out.println(notification.title());
             System.out.println(notification.url());
-            System.out.println("_____________________________________________________________________________________");
         }
     }
 

@@ -12,7 +12,6 @@ import com.itt.newsaggregatorclient.util.SingletonObjectMapper;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpRequest;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 

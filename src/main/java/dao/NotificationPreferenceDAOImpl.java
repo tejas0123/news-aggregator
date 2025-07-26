@@ -17,7 +17,7 @@ public class NotificationPreferenceDAOImpl implements NotificationPreferenceDAO{
 
 	@Override
 	public void insertCategoryPreferences(int userId, List<String> preferences) {
-		String insertQuery = """
+		final String insertQuery = """
 		        INSERT INTO category_preferences (user_id, category_id)
 				VALUES (?, (SELECT category_id FROM news_categories WHERE name = ?))
 				ON CONFLICT DO NOTHING;
@@ -26,6 +26,7 @@ public class NotificationPreferenceDAOImpl implements NotificationPreferenceDAO{
         try {
         	Connection connection = DBConnection.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
+            
             for (String preference : preferences) {
             	preparedStatement.setInt(1, userId);
             	preparedStatement.setString(2, preference.toUpperCase());
@@ -34,13 +35,14 @@ public class NotificationPreferenceDAOImpl implements NotificationPreferenceDAO{
 
             preparedStatement.executeBatch();
         } catch (SQLException sqlException) {
+        	sqlException.printStackTrace();
             throw new DAOException(sqlException.getMessage(), sqlException.getCause());
         }
 	}
 
 	@Override
 	public List<Integer> getUserIdsByCategoryName(String categoryName) {
-		String getUserswithPreferredCategoryQuery = """
+		final String getUserswithPreferredCategoryQuery = """
 	            SELECT cp.user_id
 	            FROM category_preferences cp
 	            JOIN news_categories nc ON cp.category_id = nc.category_id
@@ -52,6 +54,7 @@ public class NotificationPreferenceDAOImpl implements NotificationPreferenceDAO{
         try {
         	Connection connection = DBConnection.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(getUserswithPreferredCategoryQuery);
+            
             preparedStatement.setString(1, categoryName);
             ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -61,13 +64,14 @@ public class NotificationPreferenceDAOImpl implements NotificationPreferenceDAO{
 
             return userIds;
         } catch (SQLException sqlException) {
+        	sqlException.printStackTrace();
             throw new DAOException(sqlException.getMessage(), sqlException.getCause());
         }
 	}
 
 	@Override
 	public void deleteCategoryPreference(int userId, Set<String> categories) {
-		String deleteCategoryPreferenceQuery = """
+		final String deleteCategoryPreferenceQuery = """
 		        DELETE FROM category_preferences
 		        WHERE user_id = ?
 		        AND category_id = (
@@ -87,13 +91,14 @@ public class NotificationPreferenceDAOImpl implements NotificationPreferenceDAO{
 	        
 	        preparedStatement.executeBatch();
 	    } catch (SQLException sqlException) {
+	    	sqlException.printStackTrace();
 	        throw new DAOException(sqlException.getMessage(), sqlException.getCause());
 	    }
 	}
 
 	@Override
 	public Set<String> getUserPreferences(int userId) {
-		String getUserPreferencesQuery = """
+		final String getUserPreferencesQuery = """
 				SELECT nc.category_id, nc.name
 				FROM category_preferences cp
 				JOIN news_categories nc ON cp.category_id = nc.category_id
@@ -102,6 +107,7 @@ public class NotificationPreferenceDAOImpl implements NotificationPreferenceDAO{
 		try {
 			Connection connection = DBConnection.getConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(getUserPreferencesQuery);
+			
 			preparedStatement.setInt(1, userId);
 			ResultSet resultSet = preparedStatement.executeQuery();
 			
@@ -113,7 +119,8 @@ public class NotificationPreferenceDAOImpl implements NotificationPreferenceDAO{
 			
 			return userPreferences;
 		} catch(SQLException sqlException) {
-			throw new DAOException(sqlException.getMessage());
+			sqlException.printStackTrace();
+			throw new DAOException(sqlException.getMessage(), sqlException.getCause());
 		}
 	}
 	

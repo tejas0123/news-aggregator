@@ -20,11 +20,12 @@ public class NewsAPIDAO implements NewsProviderDAO{
 
 	@Override
 	public Instant getArticleLastFetchedAt() {
-		String LATEST_FETCH_DATE_QUERY = "SELECT MAX(fetched_at) as fetched_at FROM articles;";
+		final String LATEST_FETCH_DATE_QUERY = "SELECT MAX(fetched_at) as fetched_at FROM articles;";
 		
 		try {
 			Connection connection = DBConnection.getConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(LATEST_FETCH_DATE_QUERY);
+			
 			ResultSet resultSet = preparedStatement.executeQuery();
 			if(!resultSet.next()) {
 				throw new DAOException(Messages.LAST_FETCHED_NOT_FOUND);
@@ -37,12 +38,13 @@ public class NewsAPIDAO implements NewsProviderDAO{
 
 	@Override
 	public void insertNewsArticles(List<NewsArticle> articles, Map<String, Integer> headlinesCategories) {
-		String INSERT_ARTICLES_QUERY = "INSERT INTO articles (title, source_id, url, published_at, description, category_id, article_body) values(?, ?, ?, ?, ?, ?, ?) ON CONFLICT (url) DO NOTHING;";
+		final String INSERT_ARTICLES_QUERY = "INSERT INTO articles (title, source_id, url, published_at, description, category_id, article_body) values(?, ?, ?, ?, ?, ?, ?) ON CONFLICT (url) DO NOTHING;";
 	
 		if(!articles.isEmpty()) {
 			try {
 				Connection connection = DBConnection.getConnection();
 				PreparedStatement preparedStatement = connection.prepareStatement(INSERT_ARTICLES_QUERY);
+				
 				for(NewsArticle article: articles) {
 					preparedStatement.setString(1, article.getTitle());
 					preparedStatement.setString(2, article.getSourceId());
@@ -63,11 +65,12 @@ public class NewsAPIDAO implements NewsProviderDAO{
 
 	@Override
 	public Map<String, Integer> getNewsCategories() {
-		String GET_NEWS_CATEGORIES_QUERY = "SELECT category_id, name, is_active FROM news_categories WHERE is_active = true";
+		final String GET_NEWS_CATEGORIES_QUERY = "SELECT category_id, name, is_active FROM news_categories WHERE is_active = true";
 		
 		try {
 			Connection connection = DBConnection.getConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(GET_NEWS_CATEGORIES_QUERY);
+			
 			ResultSet resultSet = preparedStatement.executeQuery();
 			Map<String, Integer> categories = new HashMap<String, Integer>();
 			
@@ -78,13 +81,13 @@ public class NewsAPIDAO implements NewsProviderDAO{
 			}
 			return categories;
 		} catch(SQLException sqlException) {
-			sqlException.getStackTrace();
+			sqlException.printStackTrace();
 			throw new DAOException(sqlException.getMessage(), sqlException.getCause());
 		}
 	}
 	
 	public List<NewsArticle> getLatestAddedArticles() {
-	    String LATEST_ADDED_ARTICLES = """
+	    final String LATEST_ADDED_ARTICLES = """
 	        SELECT 
 			    a.article_id,
 			    a.title,
@@ -104,6 +107,7 @@ public class NewsAPIDAO implements NewsProviderDAO{
 	    try {
 	        Connection connection = DBConnection.getConnection();
 	        PreparedStatement preparedStatement = connection.prepareStatement(LATEST_ADDED_ARTICLES);
+	        
 	        ResultSet resultSet = preparedStatement.executeQuery();
 	     
 	        while (resultSet.next()) {
@@ -120,7 +124,7 @@ public class NewsAPIDAO implements NewsProviderDAO{
 	        }
 	        
 	    } catch (SQLException sqlException) {
-	        System.out.println(sqlException.getStackTrace());
+	        sqlException.printStackTrace();
 	        throw new DAOException(sqlException.getMessage(), sqlException.getCause());
 	    }
 

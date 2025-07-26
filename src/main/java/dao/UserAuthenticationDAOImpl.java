@@ -12,15 +12,13 @@ import dto.UserDetails;
 import util.DBConnection;
 
 public class UserAuthenticationDAOImpl implements UserAuthenticationDAO{
-
-	private static final String FETCH_CREDENTIALS_QUERY = "SELECT user_id, email, password, role FROM users WHERE email = ?";
-	private static final String INSERT_USER_QUERY = "INSERT INTO users (first_name, last_name, email, gender, password, role)\r\n"
-			+ "VALUES (?, ?, ?, ?::gender_enum, ?, ?::user_role);";
+	final String fetchCredentialsQuery = "SELECT user_id, email, password, role FROM users WHERE email = ?";
 	
 	public Optional<UserCredentials> fetchUserCredentials(UserCredentials loginCredentials){
 	    try {
 	        Connection connection = DBConnection.getConnection();
-	        PreparedStatement statement = connection.prepareStatement(FETCH_CREDENTIALS_QUERY);
+	        PreparedStatement statement = connection.prepareStatement(fetchCredentialsQuery);
+	        
 	        statement.setString(1, loginCredentials.email());
 
 	        ResultSet resultSet = statement.executeQuery();
@@ -41,9 +39,13 @@ public class UserAuthenticationDAOImpl implements UserAuthenticationDAO{
 
 	@Override
 	public int addNewUser(UserDetails userDetails) {
+		final String insertUserQuery = "INSERT INTO users (first_name, last_name, email, gender, password, role)\r\n"
+				+ "VALUES (?, ?, ?, ?::gender_enum, ?, ?::user_role);";
+		
 		try {
 			Connection connection = DBConnection.getConnection();
-			PreparedStatement statement = connection.prepareStatement(INSERT_USER_QUERY);
+			PreparedStatement statement = connection.prepareStatement(insertUserQuery);
+			
 			statement = setStatementValues(statement, userDetails);
 			return statement.executeUpdate();
 		} catch(SQLException sqlException) {

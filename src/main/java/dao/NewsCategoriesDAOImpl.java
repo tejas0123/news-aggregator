@@ -15,8 +15,8 @@ public class NewsCategoriesDAOImpl implements NewsCategoriesDAO{
 
 	@Override
 	public boolean addCategory(Map<String, List<String>> categoryWithKeywordsMap) {
-	    String insertCategoryQuery = "INSERT INTO news_categories (name) VALUES (?) ON CONFLICT DO NOTHING RETURNING category_id";
-	    String insertWordMapQuery = "INSERT INTO word_map (word, news_category) VALUES (?, ?) ON CONFLICT DO NOTHING";
+	    final String insertCategoryQuery = "INSERT INTO news_categories (name) VALUES (?) ON CONFLICT DO NOTHING RETURNING category_id";
+	    final String insertWordMapQuery = "INSERT INTO word_map (word, news_category) VALUES (?, ?) ON CONFLICT DO NOTHING";
 
 	    try{
 	    	Connection connection = DBConnection.getConnection();
@@ -27,6 +27,7 @@ public class NewsCategoriesDAOImpl implements NewsCategoriesDAO{
 	            List<String> keywords = entry.getValue();
 
 	            int categoryId = -1;
+	            
 	            try (PreparedStatement categoryStatement = connection.prepareStatement(insertCategoryQuery)) {
 	            	categoryStatement.setString(1, category.toUpperCase());
 	                ResultSet resultSet = categoryStatement.executeQuery();
@@ -105,7 +106,5 @@ public class NewsCategoriesDAOImpl implements NewsCategoriesDAO{
 	        sqlException.printStackTrace();
 	        throw new DAOException(sqlException.getMessage(), sqlException.getCause());
 	    }
-	}
-	
-	
+	}	
 }

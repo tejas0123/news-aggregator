@@ -18,8 +18,7 @@ public class SavedArticleDAOImpl implements SavedArticleDAO{
 	
 	@Override
     public List<NewsArticleData> getSavedArticlesByUser(int userId) {
-        List<NewsArticleData> articles = new ArrayList<>();
-        String getArticlesQuery = """
+        final String getArticlesQuery = """
             SELECT 
 		    a.article_id, 
 		    a.title, 
@@ -32,12 +31,16 @@ public class SavedArticleDAOImpl implements SavedArticleDAO{
 			LEFT JOIN article_metadata am ON a.article_id = am.article_id
 			WHERE sa.user_id = ?
 			ORDER BY sa.saved_at DESC;""";
+        
+        List<NewsArticleData> articles = new ArrayList<>();
 
-        try (Connection connection = DBConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(getArticlesQuery)) {
-
+        try {
+        	Connection connection = DBConnection.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(getArticlesQuery);
+            
         	preparedStatement.setInt(1, userId);
             ResultSet resultSet = preparedStatement.executeQuery();
+            
             while (resultSet.next()) {
                 NewsArticleData article = new NewsArticleData();
                 article.setArticle_id(resultSet.getInt("article_id"));
@@ -58,11 +61,12 @@ public class SavedArticleDAOImpl implements SavedArticleDAO{
 	 
     @Override
     public void saveArticle(int userId, int articleId) {
-        String saveArticleQuery = "INSERT INTO saved_articles(user_id, article_id) VALUES (?, ?) ON CONFLICT DO NOTHING";
+        final String saveArticleQuery = "INSERT INTO saved_articles(user_id, article_id) VALUES (?, ?) ON CONFLICT DO NOTHING";
 
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement preparedStatement = conn.prepareStatement(saveArticleQuery)) {
-
+        try {
+        	Connection conn = DBConnection.getConnection();
+            PreparedStatement preparedStatement = conn.prepareStatement(saveArticleQuery);
+            
         	preparedStatement.setInt(1, userId);
         	preparedStatement.setInt(2, articleId);
         	preparedStatement.executeUpdate();
@@ -74,11 +78,12 @@ public class SavedArticleDAOImpl implements SavedArticleDAO{
 
     @Override
     public boolean deleteArticles(int userId, Set<Integer> articleIds) {
-        String deleteArticleQuery = "DELETE FROM saved_articles WHERE user_id = ? AND article_id = ?";
+        final String deleteArticleQuery = "DELETE FROM saved_articles WHERE user_id = ? AND article_id = ?";
 
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement preparedStatement = conn.prepareStatement(deleteArticleQuery)) {
-
+        try {
+        	Connection conn = DBConnection.getConnection();
+            PreparedStatement preparedStatement = conn.prepareStatement(deleteArticleQuery);
+            
             for (Integer articleId : articleIds) {
                 preparedStatement.setInt(1, userId);
                 preparedStatement.setInt(2, articleId);
@@ -97,7 +102,7 @@ public class SavedArticleDAOImpl implements SavedArticleDAO{
 
 	@Override
 	public void saveArticle(int userId, Set<Integer> articleIds) {
-		String saveArticleQuery = "INSERT INTO saved_articles(user_id, article_id) VALUES (?, ?) ON CONFLICT DO NOTHING";
+		final String saveArticleQuery = "INSERT INTO saved_articles(user_id, article_id) VALUES (?, ?) ON CONFLICT DO NOTHING";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement preparedStatement = conn.prepareStatement(saveArticleQuery)) {

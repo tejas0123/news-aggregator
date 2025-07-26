@@ -1,7 +1,6 @@
 package com.itt.newsaggregatorclient.util;
 
 import java.util.Scanner;
-import java.util.function.Supplier;
 
 public class SingletonScanner {
     private static Scanner inputScanner = null;

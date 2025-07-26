@@ -11,12 +11,13 @@ public class ServerDAOImpl implements ServerDAO {
 
     @Override
     public List<Server> getAllServers() {
-        String getServersQuery = "SELECT * FROM servers";
+        final String getServersQuery = "SELECT * FROM servers";
         List<Server> servers = new ArrayList<>();
         
         try {
         	Connection connection = DBConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(getServersQuery);
+            
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 Server server = new Server();
